@@ -1,38 +1,13 @@
-import { useState } from "react";
 import { useAuth } from "../context/AuthProvider";
 
+import { useRestauranteStore } from "../store/RestauranteStore";
 import CardMesa from "../components/CardMesa";
 
 function Inicio() {
     const { usuario, iniciarSesionGoogle } = useAuth();
 
-    const [mesas, setMesas] = useState([
-        {
-            nombre: "Mesa 1",
-            ordenes: [
-                {
-                    nombre: "Hamburguesa",
-                    precio: 100,
-                    cantidad: 2,
-                },
-                {
-                    nombre: "Refresco",
-                    precio: 20,
-                    cantidad: 1,
-                },
-            ]
-        }
-    ]);
-
-    const agregarMesa = () => {
-        setMesas(prevMesas => [
-            ...prevMesas,
-            {
-                nombre: `Mesa ${prevMesas.length + 1}`,
-                ordenes: [],
-            },
-        ]);
-    };
+    const mesas = useRestauranteStore(state => state.mesas);
+    const agregarMesa = useRestauranteStore(state => state.agregarMesa);
 
     if (usuario === undefined) {
         return <h1>Cargando...</h1>;
