@@ -33,7 +33,8 @@ function AuthProvider({ children }) {
     }, []);
 
     useEffect(() => {
-        if(!usuario) return;
+        if(usuario === null) return navigate("/"); // Si no existe usuario, redirigir a la página de inicio
+        else if(usuario === undefined) return; // Si no se ha cargado el usuario todavía, no hacer nada
 
         // Obtener los datos del restaurante al cargar la página
         // Si el restaurante del usuario no existe, registrarlo
