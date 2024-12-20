@@ -1,7 +1,8 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { auth } from "../firebase";
 import { useNavigate } from "react-router";
+import { auth } from "../firebase";
+import { useRestauranteStore } from "../store/RestauranteStore";
 
 const provider = new GoogleAuthProvider();
 
@@ -15,6 +16,11 @@ function AuthProvider({ children }) {
     const [usuario, setUsuario] = useState(undefined);
     const navigate = useNavigate();
 
+    const obtenerRestaurante = useRestauranteStore(state => state.obtenerRestaurante);
+    const obtenerProductosRealTime = useRestauranteStore(state => state.obtenerProductosRealTime);
+    const obtenerMesasRealTime = useRestauranteStore(state => state.obtenerMesasRealTime);
+    const obtenerPedidosRealTime = useRestauranteStore(state => state.obtenerPedidosRealTime);
+
     // Actualizar el estado de la sesión en tiempo real
     useEffect(() => {
         onAuthStateChanged(auth, usuario => {
@@ -25,6 +31,25 @@ function AuthProvider({ children }) {
             }
         });
     }, []);
+
+    useEffect(() => {
+        if(!usuario) return;
+
+        // Obtener los datos del restaurante al cargar la página
+        // Si el restaurante del usuario no existe, registrarlo
+        obtenerRestaurante(usuario);
+        console.log("Subscribing to real-time updates");
+        const unsubscribeProductos = obtenerProductosRealTime(usuario.uid);
+        const unsubscribeMesas = obtenerMesasRealTime(usuario.uid);
+        const unsubscribePedidos = obtenerPedidosRealTime(usuario.uid);
+
+        return () => {
+            console.log("Unsubscribing from real-time updates");
+            unsubscribeProductos();
+            unsubscribeMesas();
+            unsubscribePedidos();
+        }
+    }, [usuario])
 
     const iniciarSesionGoogle = async () => {
         try {

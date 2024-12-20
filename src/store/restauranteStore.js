@@ -1,34 +1,56 @@
 import { create } from "zustand";
+import { obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarMesa } from "../firebase";
 
 export const useRestauranteStore = create((set, get) => ({
-    mesas: [
-        {
-            nombre: "Mesa 1",
-            ordenes: [
-                {
-                    nombre: "Taco de discada",
-                    precio: 15,
-                    cantidad: 2,
-                },
-                {
-                    nombre: "Coca Cola 500ml",
-                    precio: 20,
-                    cantidad: 1,
-                }
-            ]
-        }
-    ],
-    agregarMesa: () => {
-        // TODO: Agregar la mesa a la lista de mesas y a la base de datos
-        const prevMesas = get().mesas;
-        set(() => ({
-            mesas: [
-                ...get().mesas,
-                {
-                    nombre: `Mesa ${prevMesas.length + 1}`,
-                    ordenes: [],
-                },
-            ],
-        }));
+    restaurante: {},
+    productos: [],
+    mesas: [],
+    pedidos: [],
+    obtenerRestaurante: async (usuario) => {
+        const restaurante = await obtenerRestaurante(usuario);
+        
+        set({ restaurante });
+        
+        return restaurante;
+    },
+    agregarProducto: (usuario) => {
+        // const duenoId = usuario.uid;
+        // const producto = await registrarProducto({ uid: duenoId, nombre: "Taco de discada", precio: 15 });
+    },
+    agregarMesa: async (uid) => {
+        const mesa = await registrarMesa({
+            uid,
+            nombre: "Mesa " + (get().mesas.length + 1),
+        });
+
+        return mesa;
+    },
+    agregarPedido: (usuario) => {
+        // const duenoId = usuario.uid;
+        // const pedido = await registrarPedido({
+        //     uid: duenoId,
+        //     idMesa: mesa.id,
+        //     nombre: producto.nombre,
+        //     precio: producto.precio,
+        //     cantidad: 2,
+        // })
+    },
+    obtenerProductosRealTime: (uid) => {
+        const unsubscribe = obtenerProductos(uid, (productos) => {
+            set({ productos });
+        });
+        return unsubscribe;
+    },
+    obtenerMesasRealTime: (uid) => {
+        const unsubscribe = obtenerMesas(uid, (mesas) => {
+            set({ mesas });
+        });
+        return unsubscribe;
+    },
+    obtenerPedidosRealTime: (uid) => {
+        const unsubscribe = obtenerPedidos(uid, (pedidos) => {
+            set({ pedidos });
+        });
+        return unsubscribe;
     },
 }))
