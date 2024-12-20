@@ -6,17 +6,18 @@ import CardMesa from "../components/CardMesa";
 function Inicio() {
     const { usuario, iniciarSesionGoogle } = useAuth();
 
-    const mesas = useRestauranteStore(state => state.mesas);
     const agregarMesa = useRestauranteStore(state => state.agregarMesa);
+    
+    const restaurante = useRestauranteStore(state => state.restaurante);
+    const mesas = useRestauranteStore(state => state.mesas);
+    
 
     if (usuario === undefined) {
-        return <h1>Cargando...</h1>;
+        return <h1 className="text-center text-3xl font-bold my-8">Cargando...</h1>;
     } else if (usuario === null) {
         return (
             <main className="flex flex-col items-center my-10">
-                <h1 className="text-center text-3xl font-bold mb-8">
-                    Inicia sesión para continuar
-                </h1>
+                <h1 className="text-center text-3xl font-bold mb-8">Inicia sesión para continuar</h1>
                 <button
                     className="bg-slate-800 text-white px-4 py-2 rounded"
                     onClick={iniciarSesionGoogle}
@@ -29,6 +30,7 @@ function Inicio() {
 
     return (
         <main className="relative container mx-auto p-8">
+            <h1 className="text-center font-bold text-2xl mb-8">Restaurante de {restaurante.usuario}</h1>
             <section className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] [grid-auto-rows:200px;] gap-8">
                 {mesas.length > 0 &&
                     mesas.map((mesa, index) => (
@@ -36,7 +38,7 @@ function Inicio() {
                     ))}
 
                 <button
-                    onClick={agregarMesa}
+                    onClick={() => agregarMesa(usuario.uid)}
                     className="size-full p-4 border-4 border-slate-800 rounded flex flex-col justify-center items-center"
                 >
                     <svg
