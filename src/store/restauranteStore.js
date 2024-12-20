@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarMesa } from "../firebase";
+import { obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarMesa, registrarProducto } from "../firebase";
 
 export const useRestauranteStore = create((set, get) => ({
     restaurante: {},
@@ -13,9 +13,14 @@ export const useRestauranteStore = create((set, get) => ({
         
         return restaurante;
     },
-    agregarProducto: (usuario) => {
-        // const duenoId = usuario.uid;
-        // const producto = await registrarProducto({ uid: duenoId, nombre: "Taco de discada", precio: 15 });
+    agregarProducto: async (uid, producto) => {
+        const nuevoProducto = await registrarProducto({
+            uid,
+            nombre: producto.nombre,
+            precio: producto.precio
+        });
+        
+        return nuevoProducto;
     },
     agregarMesa: async (uid) => {
         const mesa = await registrarMesa({
