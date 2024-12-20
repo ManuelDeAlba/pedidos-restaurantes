@@ -1,27 +1,39 @@
 import { Link } from "react-router";
 import { useAuth } from "../context/AuthProvider";
+import { useRef } from "react";
 
 function Navbar() {
+    const inputRef = useRef(null);
     const { usuario, iniciarSesionGoogle, cerrarSesion } = useAuth();
+
+    const cerrarNav = () => {
+        inputRef.current.checked = false;
+    }
 
     return (
         <nav className="flex flex-wrap gap-4 justify-between items-center p-4 h-14 bg-gray-800 text-white">
-            <input className="peer hidden" type="checkbox" id="menu-toggle" />
+            <input ref={inputRef} className="peer hidden" type="checkbox" id="menu-toggle" />
 
             {usuario && <span>{usuario.displayName}</span>}
 
-            <div className="hidden peer-checked:flex fixed top-0 left-0 w-full h-dvh bg-gray-800 flex-col justify-center items-center gap-4 md:static md:w-auto md:h-auto md:bg-transparent md:flex md:flex-row md:ml-auto">
-                <Link to="/">Inicio</Link>
+            <div className="hidden peer-checked:flex fixed top-0 left-0 w-full h-dvh bg-gray-800 flex-col justify-center items-center gap-4 md:static md:w-auto md:h-auto md:bg-transparent md:flex md:flex-row md:ml-auto z-40">
+                <Link onClick={cerrarNav} to="/">Inicio</Link>
 
                 {!usuario ? (
-                    <button onClick={iniciarSesionGoogle}>
+                    <button onClick={() => {
+                        iniciarSesionGoogle();
+                        cerrarNav();
+                    }}>
                         Iniciar sesión
                     </button>
                 ) : (
                     <>
-                        <Link to="/historial">Historial</Link>
-                        <Link to="/registrar-alimento">Registrar alimento</Link>
-                        <button className="flex gap-2 group" onClick={cerrarSesion}>
+                        <Link onClick={cerrarNav} to="/registrar-producto">Registrar producto</Link>
+                        <Link onClick={cerrarNav} to="/historial">Historial</Link>
+                        <button className="flex gap-2 group" onClick={() => {
+                            cerrarSesion();
+                            cerrarNav();
+                        }}>
                             <svg
                                 className="size-6"
                                 viewBox="0 0 24 24"
