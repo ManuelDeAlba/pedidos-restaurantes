@@ -138,16 +138,17 @@ function FormularioMesa() {
     return (
         <main className="container mx-auto p-8">
             <div className="flex flex-col gap-2">
+                <span
+                    className={`self-center text-right font-bold text-sm px-4 border-2 rounded-full ${
+                        pedidosForm.length ? "text-red-500 border-red-500" : "text-green-500 border-green-500"
+                    }`}
+                >
+                    {pedidosForm.length ? "Ocupada" : "Libre"}
+                </span>
+                
                 {!editandoNombre ? (
                     <>
                         <div className="flex flex-col justify-center items-center gap-1">
-                            <span
-                                className={`block text-right font-bold text-sm px-4 border-2 rounded-full ${
-                                    pedidosForm.length ? "text-red-500 border-red-500" : "text-green-500 border-green-500"
-                                }`}
-                            >
-                                {pedidosForm.length ? "Ocupada" : "Libre"}
-                            </span>
                             <h1 className="text-center text-2xl font-bold">
                                 {mesa.nombre}
                             </h1>
