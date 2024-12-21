@@ -80,7 +80,7 @@ export async function registrarMesa(mesa){
 
 export async function registrarPedido(pedido){
     const nuevoPedido = {
-        id: Date.now() + pedido.uid,
+        id: Date.now() + pedido.idProducto,
         creador: pedido.uid,
         idMesa: pedido.idMesa,
         idProducto: pedido.idProducto,

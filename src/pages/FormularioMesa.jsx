@@ -98,8 +98,6 @@ function FormularioMesa() {
         const editando = pedidosForm.some(pedido => pedido.id);
 
         if (!editando) {
-            console.log("Agregando");
-            console.log(pedidosForm);
             // Agregar productos nuevos (no edición)
             await agregarPedido(usuario.uid, mesa.id, pedidosForm);
         } else {
