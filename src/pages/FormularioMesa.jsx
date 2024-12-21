@@ -106,10 +106,8 @@ function FormularioMesa() {
     }, [mesas]);
 
     useEffect(() => {
-        const pedidosFiltrados = pedidos?.filter(
-            pedido => pedido.idMesa === id
-        );
-        if (pedidosFiltrados?.length > 0) setPedidosForm(pedidosFiltrados);
+        const pedidosFiltrados = pedidos?.filter(pedido => pedido.idMesa === id);
+        setPedidosForm(pedidosFiltrados);
     }, [pedidos]);
 
     if (mesa === undefined || pedidos === undefined || productos === undefined)
@@ -208,7 +206,7 @@ function FormularioMesa() {
 
                     {pedidosForm.length > 0 && (
                         <ul>
-                            {pedidosForm.map((pedido, index) => (
+                            {pedidosForm?.filter(pedido => pedido.cantidad > 0)?.map((pedido, index) => (
                                 <li
                                     className="flex justify-between"
                                     key={index}
