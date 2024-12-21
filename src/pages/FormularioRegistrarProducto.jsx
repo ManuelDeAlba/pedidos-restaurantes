@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useRestauranteStore } from '../store/RestauranteStore';
+import { useRestauranteStore } from '../store/restauranteStore';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthProvider';
 

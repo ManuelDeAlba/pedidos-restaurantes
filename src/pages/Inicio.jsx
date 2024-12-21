@@ -1,6 +1,6 @@
 import { useAuth } from "../context/AuthProvider";
 
-import { useRestauranteStore } from "../store/RestauranteStore";
+import { useRestauranteStore } from "../store/restauranteStore";
 import CardMesa from "../components/CardMesa";
 
 function Inicio() {
@@ -38,7 +38,7 @@ function Inicio() {
 
                 <button
                     onClick={() => agregarMesa(usuario.uid)}
-                    className="size-full p-4 border-4 border-slate-800 rounded flex flex-col justify-center items-center"
+                    className="size-full p-4 border-4 border-slate-800 rounded flex flex-col justify-center items-center font-semibold"
                 >
                     <svg
                         className="size-10"
