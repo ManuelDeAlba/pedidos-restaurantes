@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router";
+import { Navigate, useNavigate, useParams } from "react-router";
 import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/RestauranteStore";
 import { ESTADOS_DOCUMENTOS } from "../firebase";
@@ -7,6 +7,7 @@ import { ESTADOS_DOCUMENTOS } from "../firebase";
 function FormularioMesa() {
     const { id } = useParams();
     const { usuario } = useAuth();
+    const navigate = useNavigate();
 
     const mesas = useRestauranteStore(state => state.mesas);
     const pedidos = useRestauranteStore(state => state.pedidos);
@@ -30,7 +31,8 @@ function FormularioMesa() {
                         idProducto: producto.id,
                         nombre: producto.nombre,
                         precio: producto.precio,
-                        cantidad: cantidad
+                        cantidad: cantidad,
+                        estado: ESTADOS_DOCUMENTOS.NUEVO
                     }
                 ]
             }
@@ -99,6 +101,8 @@ function FormularioMesa() {
             // Editar productos
             await editarPedido(usuario.uid, mesa.id, pedidosForm);
         }
+
+        navigate("/");
     };
 
     useEffect(() => {
@@ -234,10 +238,10 @@ function FormularioMesa() {
                             className="flex-1 min-w-28 bg-slate-800 text-white px-4 py-2 rounded"
                             type="button"
                         >
-                            Cancelar
+                            Borrar pedido
                         </button>
                         <button className="flex-1 min-w-28 bg-slate-800 text-white px-4 py-2 rounded">
-                            Aceptar pedido
+                            Guardar
                         </button>
                     </div>
                 </form>

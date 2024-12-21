@@ -22,7 +22,8 @@ export const auth = getAuth(app);
 export const ESTADOS_DOCUMENTOS = {
     BORRADO: 0,
     SIN_CAMBIOS: 1,
-    EDITADO: 2
+    EDITADO: 2,
+    NUEVO: 3
 }
 
 export async function registrarRestaurante(usuario) {

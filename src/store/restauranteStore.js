@@ -51,7 +51,7 @@ export const useRestauranteStore = create((set, get) => ({
                 });
             } else if(pedido.estado == ESTADOS_DOCUMENTOS.BORRADO) {
                 await borrarPedido(pedido.id);
-            } else if(pedido.estado === undefined){
+            } else if(pedido.estado === ESTADOS_DOCUMENTOS.NUEVO){
                 // Si no tiene estado, es un pedido nuevo
                 await registrarPedido({
                     uid,
