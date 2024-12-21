@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { addDoc, collection, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, setDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -17,6 +17,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+
+// Posibles estados para saber si un documento se tiene que borrar o si fue editado o no hubo cambios
+export const ESTADOS_DOCUMENTOS = {
+    BORRADO: 0,
+    SIN_CAMBIOS: 1,
+    EDITADO: 2
+}
 
 export async function registrarRestaurante(usuario) {
     const nuevoRestaurante = {
@@ -84,6 +91,22 @@ export async function registrarPedido(pedido){
     await setDoc(doc(db, "pedidos", nuevoPedido.id), nuevoPedido);
 
     return nuevoPedido;
+}
+
+export async function editarPedido(id, cambios){
+    try{
+        await updateDoc(doc(db, "pedidos", id), cambios);
+    } catch(error){
+        console.error("Error al editar el pedido", error);
+    }
+}
+
+export async function borrarPedido(id){
+    try{
+        await deleteDoc(doc(db, "pedidos", id));
+    } catch(error){
+        console.error("Error al borrar el pedido", error);
+    }
 }
 
 // TODO: Extraer la lógica porque se repite casi todo

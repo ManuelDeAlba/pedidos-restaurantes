@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
+import { borrarPedido, editarPedido, ESTADOS_DOCUMENTOS, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
 
 export const useRestauranteStore = create((set, get) => ({
     restaurante: undefined,
@@ -40,6 +40,28 @@ export const useRestauranteStore = create((set, get) => ({
                 precio: pedido.precio,
                 cantidad: pedido.cantidad,
             });
+        })
+        await Promise.all(promesas);
+    },
+    editarPedido: async (uid, idMesa, pedidos) => {
+        const promesas = pedidos.map(async pedido => {
+            if(pedido.estado == ESTADOS_DOCUMENTOS.EDITADO){
+                await editarPedido(pedido.id, {
+                    cantidad: pedido.cantidad,
+                });
+            } else if(pedido.estado == ESTADOS_DOCUMENTOS.BORRADO) {
+                await borrarPedido(pedido.id);
+            } else if(pedido.estado === undefined){
+                // Si no tiene estado, es un pedido nuevo
+                await registrarPedido({
+                    uid,
+                    idMesa,
+                    idProducto: pedido.idProducto,
+                    nombre: pedido.nombre,
+                    precio: pedido.precio,
+                    cantidad: pedido.cantidad,
+                });
+            }
         })
         await Promise.all(promesas);
     },
