@@ -10,11 +10,8 @@ function Inicio() {
     
     const restaurante = useRestauranteStore(state => state.restaurante);
     const mesas = useRestauranteStore(state => state.mesas);
-    
 
-    if (usuario === undefined) {
-        return <h1 className="text-center text-3xl font-bold my-8">Cargando...</h1>;
-    } else if (usuario === null) {
+    if (usuario === null) {
         return (
             <main className="flex flex-col items-center my-10">
                 <h1 className="text-center text-3xl font-bold mb-8">Inicia sesión para continuar</h1>
@@ -26,6 +23,8 @@ function Inicio() {
                 </button>
             </main>
         );
+    } else if (usuario === undefined || restaurante === undefined || mesas === undefined) {
+        return <h1 className="text-center text-3xl font-bold my-8">Cargando...</h1>;
     }
 
     return (
