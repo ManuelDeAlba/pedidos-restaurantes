@@ -22,6 +22,9 @@ function FormularioMesa() {
     const handleProductoPedido = (producto, cantidad) => {
         setPedidosForm(prevPedidos => {
             const pedido = prevPedidos.find(pedido => pedido.idProducto === producto.id);
+            
+            // Si no hay pedido y la cantidad es menor o igual a 0, no se hace nada
+            if(!pedido && cantidad <= 0) return prevPedidos;
 
             // Si no hay pedido y la cantidad es mayor a 0, se agrega un nuevo pedido
             if(!pedido && cantidad > 0){
@@ -95,6 +98,8 @@ function FormularioMesa() {
         const editando = pedidosForm.some(pedido => pedido.id);
 
         if (!editando) {
+            console.log("Agregando");
+            console.log(pedidosForm);
             // Agregar productos nuevos (no edición)
             await agregarPedido(usuario.uid, mesa.id, pedidosForm);
         } else {
