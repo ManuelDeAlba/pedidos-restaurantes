@@ -75,6 +75,7 @@ export async function registrarPedido(pedido){
         id: Date.now() + pedido.uid,
         creador: pedido.uid,
         idMesa: pedido.idMesa,
+        idProducto: pedido.idProducto,
         nombre: pedido.nombre,
         precio: pedido.precio,
         cantidad: pedido.cantidad
