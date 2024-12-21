@@ -16,6 +16,7 @@ function FormularioMesa() {
     const agregarPedido = useRestauranteStore(state => state.agregarPedido);
     const editarPedido = useRestauranteStore(state => state.editarPedido);
     const editarMesa = useRestauranteStore(state => state.editarMesa);
+    const borrarMesa = useRestauranteStore(state => state.borrarMesa);
 
     const [mesa, setMesa] = useState(undefined);
     const [pedidosForm, setPedidosForm] = useState([]);
@@ -147,7 +148,7 @@ function FormularioMesa() {
                         !editandoNombre ? (
                             <>
                                 <button onClick={() => setEditandoNombre(true)}>Editar</button>
-                                <button>Borrar</button>
+                                <button onClick={() => borrarMesa(mesa.id)}>Borrar</button>
                             </>
                         ) : (
                             <button onClick={() => {

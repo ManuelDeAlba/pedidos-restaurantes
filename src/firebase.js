@@ -111,6 +111,14 @@ export async function editarPedido(id, cambios){
     }
 }
 
+export async function borrarMesa(idMesa){
+    try{
+        await deleteDoc(doc(db, "mesas", idMesa));
+    } catch(error){
+        console.error("Error al borrar la mesa", error);
+    }
+}
+
 export async function borrarPedido(id){
     try{
         await deleteDoc(doc(db, "pedidos", id));
