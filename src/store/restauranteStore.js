@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { borrarPedido, editarPedido, ESTADOS_DOCUMENTOS, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
+import { borrarPedido, editarMesa, editarPedido, ESTADOS_DOCUMENTOS, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
 
 export const useRestauranteStore = create((set, get) => ({
     restaurante: undefined,
@@ -25,7 +25,7 @@ export const useRestauranteStore = create((set, get) => ({
     agregarMesa: async (uid) => {
         const mesa = await registrarMesa({
             uid,
-            nombre: "Mesa " + (get().mesas.length + 1),
+            nombre: "Mesa nueva",
         });
 
         return mesa;
@@ -42,6 +42,9 @@ export const useRestauranteStore = create((set, get) => ({
             });
         })
         await Promise.all(promesas);
+    },
+    editarMesa: async (idMesa, nombre) => {
+        await editarMesa(idMesa, nombre);
     },
     editarPedido: async (uid, idMesa, pedidos) => {
         const promesas = pedidos.map(async pedido => {

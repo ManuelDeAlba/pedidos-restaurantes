@@ -94,6 +94,15 @@ export async function registrarPedido(pedido){
     return nuevoPedido;
 }
 
+export async function editarMesa(idMesa, nombre){
+    console.log(idMesa, nombre);
+    try{
+        await updateDoc(doc(db, "mesas", idMesa), { nombre });
+    } catch(error){
+        console.error("Error al editar la mesa", error);
+    }
+}
+
 export async function editarPedido(id, cambios){
     try{
         await updateDoc(doc(db, "pedidos", id), cambios);

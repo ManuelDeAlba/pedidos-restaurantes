@@ -15,9 +15,11 @@ function FormularioMesa() {
 
     const agregarPedido = useRestauranteStore(state => state.agregarPedido);
     const editarPedido = useRestauranteStore(state => state.editarPedido);
+    const editarMesa = useRestauranteStore(state => state.editarMesa);
 
     const [mesa, setMesa] = useState(undefined);
     const [pedidosForm, setPedidosForm] = useState([]);
+    const [editandoNombre, setEditandoNombre] = useState(false);
 
     const handleProductoPedido = (producto, cantidad) => {
         setPedidosForm(prevPedidos => {
@@ -127,7 +129,35 @@ function FormularioMesa() {
 
     return (
         <main className="container mx-auto p-8">
-            <h1 className="text-center text-2xl font-bold">{mesa.nombre}</h1>
+            <div className="flex flex-col">
+                {
+                    !editandoNombre ? (
+                        <h1 className="text-center text-2xl font-bold">{mesa.nombre}</h1>
+                    ) : (
+                        <input
+                            type="text"
+                            value={mesa.nombre}
+                            onChange={e => setMesa({ ...mesa, nombre: e.target.value })}
+                            className="py-1 px-2 border-2 border-slate-800 rounded"
+                        />
+                    )
+                }
+                <div className="flex self-end gap-4">
+                    {
+                        !editandoNombre ? (
+                            <>
+                                <button onClick={() => setEditandoNombre(true)}>Editar</button>
+                                <button>Borrar</button>
+                            </>
+                        ) : (
+                            <button onClick={() => {
+                                editarMesa(mesa.id, mesa.nombre);
+                                setEditandoNombre(false);
+                            }}>Aceptar</button>
+                        )
+                    }
+                </div>
+            </div>
             <span
                 className={`block text-right ${
                     pedidosForm.length ? "text-red-500" : "text-green-500"
