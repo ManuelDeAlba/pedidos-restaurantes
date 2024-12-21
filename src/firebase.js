@@ -95,7 +95,6 @@ export async function registrarPedido(pedido){
 }
 
 export async function editarMesa(idMesa, nombre){
-    console.log(idMesa, nombre);
     try{
         await updateDoc(doc(db, "mesas", idMesa), { nombre });
     } catch(error){
