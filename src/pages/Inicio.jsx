@@ -30,7 +30,7 @@ function Inicio() {
     return (
         <main className="relative container mx-auto p-8">
             <h1 className="text-center font-bold text-2xl mb-8">Restaurante de {restaurante.usuario}</h1>
-            <section className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] [grid-auto-rows:200px;] gap-8">
+            <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] [grid-auto-rows:200px;] gap-8">
                 {mesas.length > 0 &&
                     mesas.map((mesa, index) => (
                         <CardMesa mesa={mesa} key={index} />

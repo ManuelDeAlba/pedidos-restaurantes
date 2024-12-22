@@ -170,7 +170,7 @@ function FormularioRegistrarProducto(){
                         <h1 className="text-center text-3xl font-bold my-8 flex-grow-[4]">Cargando...</h1>
                     ) : (
                         productos?.length > 0 ? (
-                            <section className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-8 text-center flex-grow-[4]">
+                            <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] gap-8 text-center flex-grow-[4]">
                                 {productos.map(producto => (
                                     <article key={producto.id} className="flex flex-col gap-2 border-2 border-slate-800 rounded p-4">
                                         <button
