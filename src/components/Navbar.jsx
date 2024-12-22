@@ -11,7 +11,7 @@ function Navbar() {
     }
 
     return (
-        <nav className="flex flex-wrap gap-4 justify-between items-center p-4 h-14 bg-gray-800 text-white">
+        <nav className="flex flex-wrap gap-4 justify-between items-center p-4 h-14 bg-gray-800 text-white sticky top-0 z-50">
             <input ref={inputRef} className="peer hidden" type="checkbox" id="menu-toggle" />
 
             {usuario && <span>{usuario.displayName}</span>}
