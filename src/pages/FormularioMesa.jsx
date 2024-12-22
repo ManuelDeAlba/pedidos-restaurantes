@@ -9,18 +9,25 @@ function FormularioMesa() {
     const { usuario } = useAuth();
     const navigate = useNavigate();
 
+    const categorias = useRestauranteStore(state => state.categorias);
+    const productos = useRestauranteStore(state => state.productos);
     const mesas = useRestauranteStore(state => state.mesas);
     const pedidos = useRestauranteStore(state => state.pedidos);
-    const productos = useRestauranteStore(state => state.productos);
 
     const agregarPedido = useRestauranteStore(state => state.agregarPedido);
     const editarPedido = useRestauranteStore(state => state.editarPedido);
     const editarMesa = useRestauranteStore(state => state.editarMesa);
     const borrarMesa = useRestauranteStore(state => state.borrarMesa);
 
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
     const [mesa, setMesa] = useState(undefined);
     const [pedidosForm, setPedidosForm] = useState([]);
     const [editandoNombre, setEditandoNombre] = useState(false);
+
+    const handleCategoriaClick = (idCategoria) => {
+        if (categoriaSeleccionada === idCategoria) setCategoriaSeleccionada(null);
+        else setCategoriaSeleccionada(idCategoria);
+    }
 
     const handleProductoPedido = (producto, cantidad) => {
         setPedidosForm(prevPedidos => {
@@ -145,7 +152,7 @@ function FormularioMesa() {
                 >
                     {pedidosForm.length ? "Ocupada" : "Libre"}
                 </span>
-                
+
                 {!editandoNombre ? (
                     <>
                         <div className="flex flex-col justify-center items-center gap-1">
@@ -229,126 +236,142 @@ function FormularioMesa() {
             {productos.length > 0 && (
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col gap-10 my-8"
+                    className="flex flex-col lg:flex-row gap-10 my-8"
                 >
-                    <section className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4">
-                        {productos.map(producto => (
-                            <article key={producto.id}>
-                                <button
-                                    className="w-full border-2 border-slate-800 text-slate-800 text-lg px-4 py-2 rounded"
-                                    onClick={() =>
-                                        handleProductoPedido(producto, 1)
-                                    }
-                                    type="button"
-                                >
-                                    <img
-                                        src="https://placehold.co/150"
-                                        alt={`Imagen de ${producto.nombre}`}
-                                        className="w-full h-32 object-cover object-center mb-2"
-                                    />
-                                    {producto.nombre}
-                                </button>
+                    {/* Filtros */}
+                    <div className="flex-grow flex flex-wrap gap-2 lg:flex-col lg:max-h-max lg:sticky lg:top-20">
+                        {categorias.map(categoria => (
+                            <button
+                                key={categoria.id}
+                                className={`whitespace-nowrap flex-1 border-2 border-slate-800 ${categoriaSeleccionada === categoria.id ? "bg-slate-800 text-white" : "text-slate-800"} text-lg px-4 py-1 rounded`}
+                                type="button"
+                                onClick={() => handleCategoriaClick(categoria.id)}
+                            >
+                                {categoria.categoria}
+                            </button>
+                        ))}
+                    </div>
 
-                                <div className="flex gap-4 justify-center items-center mt-2">
+                    <div className="flex-grow-[5] flex flex-col gap-4">
+                        <section className="grid grid-cols-[repeat(auto-fill,minmax(min(200px,100%),1fr))] gap-4">
+                            {productos.filter(producto => categoriaSeleccionada === null || producto.categorias.includes(categoriaSeleccionada)).map(producto => (
+                                <article key={producto.id}>
                                     <button
-                                        onClick={() =>
-                                            handleProductoPedido(producto, -1)
-                                        }
-                                        type="button"
-                                        className="size-10 flex justify-center items-center bg-slate-800 text-white/80 border-2 border-slate-800 rounded-full hover:bg-transparent hover:text-slate-800"
-                                        aria-label="Restar cantidad de producto"
-                                    >
-                                        <svg
-                                            className="size-8"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <path
-                                                stroke="none"
-                                                d="M0 0h24v24H0z"
-                                                fill="none"
-                                            />
-                                            <path d="M5 12l14 0" />
-                                        </svg>
-                                    </button>
-                                    <span className="text-2xl font-semibold">
-                                        {pedidosForm.find(
-                                            pedido =>
-                                                pedido.idProducto == producto.id
-                                        )?.cantidad ?? 0}
-                                    </span>
-                                    <button
+                                        className="w-full border-2 border-slate-800 text-slate-800 text-lg px-4 py-2 rounded"
                                         onClick={() =>
                                             handleProductoPedido(producto, 1)
                                         }
                                         type="button"
-                                        className="size-10 flex justify-center items-center bg-slate-800 text-white/80 border-2 border-slate-800 rounded-full hover:bg-transparent hover:text-slate-800"
-                                        aria-label="Sumar cantidad de producto"
                                     >
-                                        <svg
-                                            className="size-8"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <path
-                                                stroke="none"
-                                                d="M0 0h24v24H0z"
-                                                fill="none"
-                                            />
-                                            <path d="M12 5l0 14" />
-                                            <path d="M5 12l14 0" />
-                                        </svg>
+                                        <img
+                                            src="https://placehold.co/150"
+                                            alt={`Imagen de ${producto.nombre}`}
+                                            className="w-full h-32 object-cover object-center mb-2"
+                                        />
+                                        {producto.nombre}
                                     </button>
-                                </div>
-                            </article>
-                        ))}
-                    </section>
 
-                    {pedidosForm.length > 0 && (
-                        <ul>
-                            {pedidosForm
-                                ?.filter(pedido => pedido.cantidad > 0)
-                                ?.map((pedido, index) => (
-                                    <li
-                                        className="flex justify-between"
-                                        key={index}
-                                    >
-                                        <span>{pedido.nombre}</span>
-                                        <span>
-                                            {pedido.cantidad} x ${pedido.precio}{" "}
-                                            = ${pedido.cantidad * pedido.precio}
+                                    <div className="flex gap-4 justify-center items-center mt-2">
+                                        <button
+                                            onClick={() =>
+                                                handleProductoPedido(producto, -1)
+                                            }
+                                            type="button"
+                                            className="size-10 flex justify-center items-center bg-slate-800 text-white/80 border-2 border-slate-800 rounded-full hover:bg-transparent hover:text-slate-800"
+                                            aria-label="Restar cantidad de producto"
+                                        >
+                                            <svg
+                                                className="size-8"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path
+                                                    stroke="none"
+                                                    d="M0 0h24v24H0z"
+                                                    fill="none"
+                                                />
+                                                <path d="M5 12l14 0" />
+                                            </svg>
+                                        </button>
+                                        <span className="text-2xl font-semibold">
+                                            {pedidosForm.find(
+                                                pedido =>
+                                                    pedido.idProducto == producto.id
+                                            )?.cantidad ?? 0}
                                         </span>
-                                    </li>
-                                ))}
-                        </ul>
-                    )}
+                                        <button
+                                            onClick={() =>
+                                                handleProductoPedido(producto, 1)
+                                            }
+                                            type="button"
+                                            className="size-10 flex justify-center items-center bg-slate-800 text-white/80 border-2 border-slate-800 rounded-full hover:bg-transparent hover:text-slate-800"
+                                            aria-label="Sumar cantidad de producto"
+                                        >
+                                            <svg
+                                                className="size-8"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path
+                                                    stroke="none"
+                                                    d="M0 0h24v24H0z"
+                                                    fill="none"
+                                                />
+                                                <path d="M12 5l0 14" />
+                                                <path d="M5 12l14 0" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </article>
+                            ))}
+                        </section>
 
-                    <span className="block text-right text-lg font-semibold mt-4">
-                        Total: $
-                        {pedidosForm.reduce(
-                            (acc, ac) => acc + ac.precio * ac.cantidad,
-                            0
+                        {pedidosForm.length > 0 && (
+                            <ul>
+                                {pedidosForm
+                                    ?.filter(pedido => pedido.cantidad > 0)
+                                    ?.map((pedido, index) => (
+                                        <li
+                                            className="flex justify-between"
+                                            key={index}
+                                        >
+                                            <span>{pedido.nombre}</span>
+                                            <span>
+                                                {pedido.cantidad} x ${pedido.precio}{" "}
+                                                = ${pedido.cantidad * pedido.precio}
+                                            </span>
+                                        </li>
+                                    ))}
+                            </ul>
                         )}
-                    </span>
 
-                    <div className="flex flex-wrap gap-4">
-                        <button
-                            className="flex-1 min-w-28 bg-slate-800 text-white px-4 py-2 rounded"
-                            type="button"
-                        >
-                            Borrar pedido
-                        </button>
-                        <button className="flex-1 min-w-28 bg-slate-800 text-white px-4 py-2 rounded">
-                            Guardar
-                        </button>
+                        <span className="block text-right text-lg font-semibold mt-4">
+                            Total: $
+                            {pedidosForm.reduce(
+                                (acc, ac) => acc + ac.precio * ac.cantidad,
+                                0
+                            )}
+                        </span>
+
+                        <div className="flex flex-wrap gap-4">
+                            <button
+                                className="flex-1 min-w-28 bg-slate-800 text-white px-4 py-2 rounded"
+                                type="button"
+                            >
+                                Borrar pedido
+                            </button>
+                            <button className="flex-1 min-w-28 bg-slate-800 text-white px-4 py-2 rounded">
+                                Guardar
+                            </button>
+                        </div>
                     </div>
                 </form>
             )}
