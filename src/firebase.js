@@ -110,6 +110,14 @@ export async function editarPedido(id, cambios){
     }
 }
 
+export async function borrarProducto(idProducto){
+    try{
+        await deleteDoc(doc(db, "productos", idProducto));
+    } catch(error){
+        console.error("Error al borrar el producto", error);
+    }
+}
+
 export async function borrarMesa(idMesa){
     try{
         await deleteDoc(doc(db, "mesas", idMesa));
