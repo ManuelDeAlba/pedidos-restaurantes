@@ -17,6 +17,7 @@ function AuthProvider({ children }) {
     const navigate = useNavigate();
 
     const obtenerRestaurante = useRestauranteStore(state => state.obtenerRestaurante);
+    const obtenerCategoriasRealTime = useRestauranteStore(state => state.obtenerCategoriasRealTime);
     const obtenerProductosRealTime = useRestauranteStore(state => state.obtenerProductosRealTime);
     const obtenerMesasRealTime = useRestauranteStore(state => state.obtenerMesasRealTime);
     const obtenerPedidosRealTime = useRestauranteStore(state => state.obtenerPedidosRealTime);
@@ -43,12 +44,14 @@ function AuthProvider({ children }) {
         const unsubscribeProductos = obtenerProductosRealTime(usuario.uid);
         const unsubscribeMesas = obtenerMesasRealTime(usuario.uid);
         const unsubscribePedidos = obtenerPedidosRealTime(usuario.uid);
+        const unsubscribeCategorias = obtenerCategoriasRealTime(usuario.uid);
 
         return () => {
             console.log("Unsubscribing from real-time updates");
             unsubscribeProductos();
             unsubscribeMesas();
             unsubscribePedidos();
+            unsubscribeCategorias();
         }
     }, [usuario])
 

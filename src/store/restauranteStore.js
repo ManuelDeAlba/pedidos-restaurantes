@@ -1,8 +1,9 @@
 import { create } from "zustand";
-import { borrarMesa, borrarPedido, borrarProducto, editarMesa, editarPedido, ESTADOS_DOCUMENTOS, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
+import { borrarCategoria, borrarMesa, borrarPedido, borrarProducto, editarMesa, editarPedido, ESTADOS_DOCUMENTOS, obtenerCategorias, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarCategoria, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
 
 export const useRestauranteStore = create((set, get) => ({
     restaurante: undefined,
+    categorias: undefined,
     productos: undefined,
     mesas: undefined,
     pedidos: undefined,
@@ -13,11 +14,20 @@ export const useRestauranteStore = create((set, get) => ({
         
         return restaurante;
     },
+    agregarCategoria: async (uid, datos) => {
+        const nuevaCategoria = await registrarCategoria({
+            uid,
+            categoria: datos.categoria
+        });
+
+        return nuevaCategoria;
+    },
     agregarProducto: async (uid, producto) => {
         const nuevoProducto = await registrarProducto({
             uid,
             nombre: producto.nombre,
-            precio: producto.precio
+            precio: producto.precio,
+            categorias: producto.categorias,
         });
 
         return nuevoProducto;
@@ -68,11 +78,20 @@ export const useRestauranteStore = create((set, get) => ({
         })
         await Promise.all(promesas);
     },
+    borrarCategoria: async (idCategoria) => {
+        await borrarCategoria(idCategoria);
+    },
     borrarProducto: async (idProducto) => {
         await borrarProducto(idProducto);
     },
     borrarMesa: async (idMesa) => {
         await borrarMesa(idMesa);
+    },
+    obtenerCategoriasRealTime: (uid) => {
+        const unsubscribe = obtenerCategorias(uid, (categorias) => {
+            set({ categorias: categorias ?? null });
+        });
+        return unsubscribe;
     },
     obtenerProductosRealTime: (uid) => {
         const unsubscribe = obtenerProductos(uid, (productos) => {

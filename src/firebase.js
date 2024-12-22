@@ -51,6 +51,18 @@ export async function obtenerRestaurante(usuario){
     return await registrarRestaurante(usuario);
 }
 
+export async function registrarCategoria(categoria) {
+    const nuevaCategoria = {
+        id: Date.now() + categoria.uid,
+        creador: categoria.uid,
+        categoria: categoria.categoria,
+    }
+
+    await setDoc(doc(db, "categoriasProductos", nuevaCategoria.id), nuevaCategoria);
+
+    return nuevaCategoria;
+}
+
 export async function registrarProducto(producto) {
     // TODO: Lo de las imágenes lo dejamos para después
     const nuevoProducto = {
@@ -58,6 +70,7 @@ export async function registrarProducto(producto) {
         creador: producto.uid,
         nombre: producto.nombre,
         precio: producto.precio,
+        categorias: producto.categorias,
     }
 
     // Crear un documento en la subcolección productos de la colección del restaurante
@@ -110,6 +123,14 @@ export async function editarPedido(id, cambios){
     }
 }
 
+export async function borrarCategoria(idCategoria){
+    try{
+        await deleteDoc(doc(db, "categoriasProductos", idCategoria));
+    } catch(error){
+        console.error("Error al borrar la categoría", error);
+    }
+}
+
 export async function borrarProducto(idProducto){
     try{
         await deleteDoc(doc(db, "productos", idProducto));
@@ -135,6 +156,20 @@ export async function borrarPedido(id){
 }
 
 // TODO: Extraer la lógica porque se repite casi todo
+export function obtenerCategorias(uid, callback){
+    const q = query(collection(db, "categoriasProductos"), where("creador", "==", uid), orderBy("categoria"));
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const categorias = [];
+        querySnapshot.forEach((doc) => {
+            categorias.push(doc.data());
+        });
+        callback(categorias);
+    });
+
+    return unsubscribe;
+}
+
 export function obtenerProductos(uid, callback){
     const q = query(collection(db, "productos"), where("creador", "==", uid), orderBy("nombre"));
     
