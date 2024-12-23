@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/restauranteStore";
 import CardMesa from "../components/CardMesa";
 import { useNavigate } from "react-router";
+import IconoMas from "../icons/IconoMas";
 
 function Inicio() {
     const { usuario, iniciarSesionGoogle } = useAuth();
@@ -55,19 +56,7 @@ function Inicio() {
                     onClick={() => agregarMesa({ uid: usuario.uid })}
                     className="size-full p-4 border-4 border-slate-800 rounded flex flex-col justify-center items-center font-semibold"
                 >
-                    <svg
-                        className="size-10"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                        <path d="M12 5l0 14" />
-                        <path d="M5 12l14 0" />
-                    </svg>
+                    <IconoMas className="size-10" />
                     Agregar mesa
                 </button>
             </section>

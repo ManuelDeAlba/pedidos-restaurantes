@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRestauranteStore } from '../store/restauranteStore';
 import { useAuth } from '../context/AuthProvider';
+import { useRestauranteStore } from '../store/restauranteStore';
+
+import IconoBorrar from '../icons/IconoBorrar';
 
 const listFormatter = new Intl.ListFormat('es', {
     type: "conjunction"
@@ -135,26 +137,7 @@ function FormularioRegistrarProducto(){
                                                     onClick={() => borrarCategoria(categoria.id)}
                                                     aria-label="Borrar producto"
                                                 >
-                                                    <svg
-                                                        className="size-7 text-red-500 transition-transform hover:translate-x-1"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <path
-                                                            stroke="none"
-                                                            d="M0 0h24v24H0z"
-                                                            fill="none"
-                                                        />
-                                                        <path d="M4 7l16 0" />
-                                                        <path d="M10 11l0 6" />
-                                                        <path d="M14 11l0 6" />
-                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                                    </svg>
+                                                    <IconoBorrar className="size-7 text-red-500 transition-transform hover:translate-x-1" />
                                                 </button>
                                             </li>
                                         ))
@@ -178,26 +161,7 @@ function FormularioRegistrarProducto(){
                                             onClick={() => borrarProducto(producto.id)}
                                             aria-label="Borrar producto"
                                         >
-                                            <svg
-                                                className="size-7 text-red-500 transition-transform hover:-translate-y-1"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path
-                                                    stroke="none"
-                                                    d="M0 0h24v24H0z"
-                                                    fill="none"
-                                                />
-                                                <path d="M4 7l16 0" />
-                                                <path d="M10 11l0 6" />
-                                                <path d="M14 11l0 6" />
-                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                            </svg>
+                                            <IconoBorrar className="size-7 text-red-500 transition-transform hover:translate-x-1" />
                                         </button>
                                         <img
                                             src="https://placehold.co/150"

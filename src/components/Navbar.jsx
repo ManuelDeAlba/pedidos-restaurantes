@@ -2,6 +2,9 @@ import { Link } from "react-router";
 import { useAuth } from "../context/AuthProvider";
 import { useRef } from "react";
 
+import IconoSalir from "../icons/IconoSalir";
+import IconoMenu from "../icons/IconoMenu";
+
 function Navbar() {
     const inputRef = useRef(null);
     const { usuario, iniciarSesionGoogle, cerrarSesion } = useAuth();
@@ -34,24 +37,7 @@ function Navbar() {
                             cerrarSesion();
                             cerrarNav();
                         }}>
-                            <svg
-                                className="size-6"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path
-                                    stroke="none"
-                                    d="M0 0h24v24H0z"
-                                    fill="none"
-                                />
-                                <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
-                                <path d="M9 12h12l-3 -3" />
-                                <path d="M18 15l3 -3" />
-                            </svg>
+                            <IconoSalir />
                             <span className="md:hidden">Cerrar sesión</span>
                         </button>
                     </>
@@ -62,15 +48,7 @@ function Navbar() {
                 htmlFor="menu-toggle"
                 className="ml-auto cursor-pointer md:hidden z-50"
             >
-                <svg
-                    className="fill-current text-white/80"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                >
-                    <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
-                </svg>
+                <IconoMenu />
             </label>
         </nav>
     );
