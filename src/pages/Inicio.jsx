@@ -2,14 +2,21 @@ import { useAuth } from "../context/AuthProvider";
 
 import { useRestauranteStore } from "../store/restauranteStore";
 import CardMesa from "../components/CardMesa";
+import { useNavigate } from "react-router";
 
 function Inicio() {
     const { usuario, iniciarSesionGoogle } = useAuth();
+    const navigate = useNavigate();
 
     const agregarMesa = useRestauranteStore(state => state.agregarMesa);
     
     const restaurante = useRestauranteStore(state => state.restaurante);
     const mesas = useRestauranteStore(state => state.mesas);
+
+    const handlePedidoLinea = async () => {
+        const mesaVirtual = await agregarMesa(usuario.uid, "Pedido en línea");
+        navigate(`/pedido-en-linea/${mesaVirtual.id}`);
+    }
 
     if (usuario === null) {
         return (
@@ -57,7 +64,10 @@ function Inicio() {
                 </button>
             </section>
 
-            <button className="fixed bottom-4 inset-x-8 border-4 border-slate-800 bg-slate-800 text-white p-3 rounded hover:bg-white hover:text-slate-800">Registrar pedido en línea</button>
+            <button
+                onClick={handlePedidoLinea}
+                className="fixed bottom-4 inset-x-8 border-4 border-slate-800 bg-slate-800 text-white p-3 rounded hover:bg-white hover:text-slate-800"
+            >Registrar pedido en línea</button>
         </main>
     );
 }

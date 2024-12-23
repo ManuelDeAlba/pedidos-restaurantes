@@ -32,10 +32,10 @@ export const useRestauranteStore = create((set, get) => ({
 
         return nuevoProducto;
     },
-    agregarMesa: async (uid) => {
+    agregarMesa: async (uid, nombre="Mesa nueva") => {
         const mesa = await registrarMesa({
             uid,
-            nombre: "Mesa nueva",
+            nombre,
         });
 
         return mesa;

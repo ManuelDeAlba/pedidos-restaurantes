@@ -4,7 +4,8 @@ import AuthProvider from "./context/AuthProvider";
 import Navbar from "./components/Navbar";
 
 import Inicio from "./pages/Inicio";
-import FormularioMesa from "./pages/FormularioMesa";
+import FormularioPedidoMesa from "./pages/FormularioPedidoMesa";
+import FormularioPedidoLinea from "./pages/FormularioPedidoLinea";
 import FormularioRegistrarProducto from "./pages/FormularioRegistrarProducto";
 
 function App(){
@@ -14,7 +15,8 @@ function App(){
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<Inicio />} />
-                    <Route path="/mesa/:id" element={<FormularioMesa />} />
+                    <Route path="/mesa/:id" element={<FormularioPedidoMesa />} />
+                    <Route path="/pedido-en-linea/:id" element={<FormularioPedidoLinea />} />
                     <Route path="registrar-producto" element={<FormularioRegistrarProducto />} />
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
