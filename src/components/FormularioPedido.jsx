@@ -144,104 +144,98 @@ function FormularioPedido({ linea=false }) {
 
     return (
         <main className="container mx-auto p-8">
-            {
-                !linea ? (
-                    <div className="flex flex-col gap-2">
-                        {
-                            !linea && (
-                                <span
-                                    className={`self-center text-right font-bold text-sm px-4 border-2 rounded-full ${
-                                        pedidosForm.length ? "text-red-500 border-red-500" : "text-green-500 border-green-500"
-                                    }`}
-                                >
-                                    {pedidosForm.length ? "Ocupada" : "Libre"}
-                                </span>
-                            )
-                        }
+            <div className="flex flex-col gap-2">
+                {
+                    !linea && (
+                        <span
+                            className={`self-center text-right font-bold text-sm px-4 border-2 rounded-full ${
+                                pedidosForm.length ? "text-red-500 border-red-500" : "text-green-500 border-green-500"
+                            }`}
+                        >
+                            {pedidosForm.length ? "Ocupada" : "Libre"}
+                        </span>
+                    )
+                }
 
-                        {!editandoNombre ? (
-                            <>
-                                <div className="flex flex-col justify-center items-center gap-1">
-                                    <h1 className="text-center text-2xl font-bold">
-                                        {mesa.nombre}
-                                    </h1>
-                                </div>
-                                <div className="flex self-end gap-4 mb-4">
-                                    <button
-                                        onClick={() => setEditandoNombre(true)}
-                                        aria-label="Editar nombre de mesa"
-                                    >
-                                        <svg
-                                            className="size-7 text-orange-400 transition-transform hover:-translate-y-1"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <path
-                                                stroke="none"
-                                                d="M0 0h24v24H0z"
-                                                fill="none"
-                                            />
-                                            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
-                                            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
-                                            <path d="M16 5l3 3" />
-                                        </svg>
-                                    </button>
-                                    <button
-                                        onClick={() => borrarMesa(mesa.id)}
-                                        aria-label="Borrar mesa"
-                                    >
-                                        <svg
-                                            className="size-7 text-red-500 transition-transform hover:-translate-y-1"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        >
-                                            <path
-                                                stroke="none"
-                                                d="M0 0h24v24H0z"
-                                                fill="none"
-                                            />
-                                            <path d="M4 7l16 0" />
-                                            <path d="M10 11l0 6" />
-                                            <path d="M14 11l0 6" />
-                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <form
-                                className="flex flex-wrap gap-4 mb-4"
-                                onSubmit={(e) => {
-                                    e.preventDefault();
-                                    editarMesa(mesa.id, mesa.nombre);
-                                    setEditandoNombre(false);
-                                }}
+                {!editandoNombre ? (
+                    <>
+                        <div className="flex flex-col justify-center items-center gap-1">
+                            <h1 className="text-center text-2xl font-bold">
+                                {mesa.nombre}
+                            </h1>
+                        </div>
+                        <div className="flex self-end gap-4 mb-4">
+                            <button
+                                onClick={() => setEditandoNombre(true)}
+                                aria-label="Editar nombre de mesa"
                             >
-                                <input
-                                    type="text"
-                                    value={mesa.nombre}
-                                    onChange={e =>
-                                        setMesa({ ...mesa, nombre: e.target.value })
-                                    }
-                                    className="max-w-full flex-grow-[3] py-1 px-2 border-2 border-slate-800 rounded"
-                                />
-                                <button className="flex-1 bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Aceptar</button>
-                            </form>
-                        )}
-                    </div>
+                                <svg
+                                    className="size-7 text-orange-400 transition-transform hover:-translate-y-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path
+                                        stroke="none"
+                                        d="M0 0h24v24H0z"
+                                        fill="none"
+                                    />
+                                    <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+                                    <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+                                    <path d="M16 5l3 3" />
+                                </svg>
+                            </button>
+                            <button
+                                onClick={() => borrarMesa(mesa.id)}
+                                aria-label="Borrar mesa"
+                            >
+                                <svg
+                                    className="size-7 text-red-500 transition-transform hover:-translate-y-1"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path
+                                        stroke="none"
+                                        d="M0 0h24v24H0z"
+                                        fill="none"
+                                    />
+                                    <path d="M4 7l16 0" />
+                                    <path d="M10 11l0 6" />
+                                    <path d="M14 11l0 6" />
+                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                </svg>
+                            </button>
+                        </div>
+                    </>
                 ) : (
-                    <h1 className="text-center text-2xl font-bold">Pedido en línea</h1>
-                )
-            }
+                    <form
+                        className="flex flex-wrap gap-4 mb-4"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            editarMesa(mesa.id, mesa.nombre);
+                            setEditandoNombre(false);
+                        }}
+                    >
+                        <input
+                            type="text"
+                            value={mesa.nombre}
+                            onChange={e =>
+                                setMesa({ ...mesa, nombre: e.target.value })
+                            }
+                            className="max-w-full flex-grow-[3] py-1 px-2 border-2 border-slate-800 rounded"
+                        />
+                        <button className="flex-1 bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Aceptar</button>
+                    </form>
+                )}
+            </div>
 
             {productos.length > 0 && (
                 <form

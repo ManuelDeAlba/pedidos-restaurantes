@@ -80,10 +80,11 @@ export async function registrarProducto(producto) {
 }
 
 export async function registrarMesa(mesa){
-   const nuevaMesa = {
+    const nuevaMesa = {
         id: Date.now() + mesa.uid,
         creador: mesa.uid,
         nombre: mesa.nombre,
+        linea: mesa.linea
     }
 
     await setDoc(doc(db, "mesas", nuevaMesa.id), nuevaMesa);

@@ -13,8 +13,13 @@ function Inicio() {
     const restaurante = useRestauranteStore(state => state.restaurante);
     const mesas = useRestauranteStore(state => state.mesas);
 
+
     const handlePedidoLinea = async () => {
-        const mesaVirtual = await agregarMesa(usuario.uid, "Pedido en línea");
+        const mesaVirtual = await agregarMesa({
+            uid: usuario.uid,
+            nombre: "Pedido nuevo",
+            linea: true
+        });
         navigate(`/pedido-en-linea/${mesaVirtual.id}`);
     }
 
@@ -35,16 +40,19 @@ function Inicio() {
     }
 
     return (
-        <main className="relative container mx-auto p-8">
+        <main className="relative container mx-auto p-8 mb-8">
             <h1 className="text-center font-bold text-2xl mb-8">Restaurante de {restaurante.usuario}</h1>
-            <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] [grid-auto-rows:200px;] gap-8">
-                {mesas.length > 0 &&
-                    mesas.map((mesa, index) => (
-                        <CardMesa mesa={mesa} key={index} />
-                    ))}
+
+            <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] [grid-auto-rows:200px;] gap-8 my-8">
+                {
+                    mesas.filter(mesas => !mesas.linea).length > 0 &&
+                        mesas.filter(mesas => !mesas.linea).map((mesa, index) => (
+                            <CardMesa mesa={mesa} key={index} />
+                        ))
+                }
 
                 <button
-                    onClick={() => agregarMesa(usuario.uid)}
+                    onClick={() => agregarMesa({ uid: usuario.uid })}
                     className="size-full p-4 border-4 border-slate-800 rounded flex flex-col justify-center items-center font-semibold"
                 >
                     <svg
@@ -63,6 +71,21 @@ function Inicio() {
                     Agregar mesa
                 </button>
             </section>
+
+            {
+                mesas.filter(mesas => mesas.linea).length > 0 && (
+                    <>
+                        <h2 className="my-8 text-center font-bold text-xl">Pedidos en línea</h2>
+                        <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] [grid-auto-rows:200px;] gap-8 my-8">
+                            {
+                                mesas.filter(mesas => mesas.linea).map((mesa, index) => (
+                                    <CardMesa mesa={mesa} key={index} />
+                                ))
+                            }
+                        </section>
+                    </>
+                )
+            }
 
             <button
                 onClick={handlePedidoLinea}
