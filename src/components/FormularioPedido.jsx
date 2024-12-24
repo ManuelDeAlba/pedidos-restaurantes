@@ -238,9 +238,9 @@ function FormularioPedido({ linea=false }) {
                                         type="button"
                                     >
                                         <img
-                                            src="https://placehold.co/150"
+                                            src={producto.url ?? "https://placehold.co/150"}
                                             alt={`Imagen de ${producto.nombre}`}
-                                            className="w-full h-32 object-cover object-center mb-2"
+                                            className="w-full h-32 object-contain object-center mb-2"
                                         />
                                         {producto.nombre}
                                     </button>

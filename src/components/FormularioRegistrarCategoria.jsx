@@ -1,8 +1,9 @@
+import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/restauranteStore";
 import IconoBorrar from "../icons/IconoBorrar";
 
-function FormularioRegistrarCategoria() {
+function FormularioRegistrarCategoria({ setShowCategoriaForm }) {
     const { register, handleSubmit, formState, reset } = useForm({
         defaultValues: {
             categoria: "",
@@ -11,6 +12,7 @@ function FormularioRegistrarCategoria() {
 
     const { usuario } = useAuth();
 
+    const categorias = useRestauranteStore(state => state.categorias);
     const agregarCategoria = useRestauranteStore(state => state.agregarCategoria);
     const borrarCategoria = useRestauranteStore(state => state.borrarCategoria);
 
@@ -22,7 +24,7 @@ function FormularioRegistrarCategoria() {
     };
 
     return (
-        <div>
+        <div className="lg:max-h-[calc(100dvh-90px)] overflow-auto">
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-4"

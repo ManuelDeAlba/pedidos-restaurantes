@@ -25,6 +25,7 @@ export const useRestauranteStore = create((set, get) => ({
     agregarProducto: async (uid, producto) => {
         const nuevoProducto = await registrarProducto({
             uid,
+            fileFoto: producto.fileFoto,
             nombre: producto.nombre,
             precio: producto.precio,
             categorias: producto.categorias,

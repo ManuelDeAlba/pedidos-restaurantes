@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getStorage, uploadBytes, getDownloadURL, deleteObject, ref} from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -17,6 +18,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
+export const storage = getStorage(app);
 
 // Posibles estados para saber si un documento se tiene que borrar o si fue editado o no hubo cambios
 export const ESTADOS_DOCUMENTOS = {
@@ -64,8 +66,7 @@ export async function registrarCategoria(categoria) {
 }
 
 export async function registrarProducto(producto) {
-    // TODO: Lo de las imágenes lo dejamos para después
-    const nuevoProducto = {
+    let nuevoProducto = {
         id: Date.now() + producto.uid,
         creador: producto.uid,
         nombre: producto.nombre,
@@ -73,10 +74,27 @@ export async function registrarProducto(producto) {
         categorias: producto.categorias,
     }
 
-    // Crear un documento en la subcolección productos de la colección del restaurante
-    await setDoc(doc(db, "productos", nuevoProducto.id), nuevoProducto);
+    try{
+        // Subir la foto del producto
+        const storageRef = ref(storage, `productos/${nuevoProducto.id}`);
+        await uploadBytes(storageRef, producto.fileFoto);
+    
+        nuevoProducto.url = await getDownloadURL(ref(storage, `productos/${nuevoProducto.id}`));
+    } catch(error){
+        // Error al subir la foto
+        console.error(error);
+    }
 
-    return nuevoProducto;
+    try{
+        // Crear un documento en la subcolección productos de la colección del restaurante
+        await setDoc(doc(db, "productos", nuevoProducto.id), nuevoProducto);
+    
+        return nuevoProducto;
+    } catch(error){
+        // Error al subir el documento del producto
+        console.error(error);
+    }
+
 }
 
 export async function registrarMesa(mesa){
