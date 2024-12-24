@@ -25,7 +25,7 @@ export const ESTADOS_DOCUMENTOS = {
     BORRADO: 0,
     SIN_CAMBIOS: 1,
     EDITADO: 2,
-    NUEVO: 3
+    NUEVO: 3,
 }
 
 export async function registrarRestaurante(usuario) {
@@ -122,7 +122,8 @@ export async function registrarPedido(pedido){
         idProducto: pedido.idProducto,
         nombre: pedido.nombre,
         precio: pedido.precio,
-        cantidad: pedido.cantidad
+        cantidad: pedido.cantidad,
+        completado: pedido.completado
     }
 
     await setDoc(doc(db, "pedidos", nuevoPedido.id), nuevoPedido);

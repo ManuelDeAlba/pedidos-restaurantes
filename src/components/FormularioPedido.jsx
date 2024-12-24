@@ -8,6 +8,7 @@ import IconoEditar from "../icons/IconoEditar";
 import IconoBorrar from "../icons/IconoBorrar";
 import IconoMenos from "../icons/IconoMenos";
 import IconoMas from "../icons/IconoMas";
+import IconoFlechaSalir from "../icons/IconoFlechaSalir";
 
 function FormularioPedido({ linea=false }) {
     const { id } = useParams();
@@ -110,22 +111,30 @@ function FormularioPedido({ linea=false }) {
         });
     };
 
-    const handleSubmit = async e => {
-        e.preventDefault();
+    const handleSubmit = async (e, completado=false) => {
+        if(e) e.preventDefault();
 
         // Si algún pedido tiene un id, es porque ya pasó por la base de datos, por lo tanto se está editando
         const editando = pedidosForm.some(pedido => pedido.id);
 
         if (!editando) {
             // Agregar productos nuevos (no edición)
-            await agregarPedido(usuario.uid, mesa.id, pedidosForm);
+            await agregarPedido(usuario.uid, mesa.id, pedidosForm.map(pedido => ({...pedido, completado})));
         } else {
             // Editar productos
-            await editarPedido(usuario.uid, mesa.id, pedidosForm);
+            await editarPedido(usuario.uid, mesa.id, pedidosForm.map(pedido => ({...pedido, completado})));
         }
-
         navigate("/");
     };
+
+    const handleSalir = () => {
+        navigate("/");
+    }
+
+    const handleCompletarPedido = async () => {
+        await handleSubmit(undefined, true);
+        navigate("/");
+    }
 
     useEffect(() => {
         if (mesas?.length > 0)
@@ -134,7 +143,8 @@ function FormularioPedido({ linea=false }) {
 
     useEffect(() => {
         const pedidosFiltrados = pedidos?.filter(
-            pedido => pedido.idMesa === id
+            pedido => pedido.idMesa === id &&
+            !pedido.completado
         );
         setPedidosForm(pedidosFiltrados);
     }, [pedidos]);
@@ -169,8 +179,15 @@ function FormularioPedido({ linea=false }) {
                                 {mesa.nombre}
                             </h1>
                         </div>
-                        <div className="flex self-end gap-4 mb-4">
+                        <div className="flex gap-4 mb-4">
                             <button
+                                onClick={handleSalir}
+                                aria-label="Salir de la mesa"
+                            >
+                                <IconoFlechaSalir className="size-7 text-slate-800 transition-transform hover:-translate-x-1" />
+                            </button>
+                            <button
+                                className="ml-auto"
                                 onClick={() => setEditandoNombre(true)}
                                 aria-label="Editar nombre de mesa"
                             >
@@ -309,19 +326,25 @@ function FormularioPedido({ linea=false }) {
                         {/* Botones del formulario */}
                         <div className="flex flex-wrap gap-4">
                             <button
-                                className="flex-1 min-w-28 bg-slate-800 text-white px-4 py-2 rounded"
                                 type="button"
+                                className="flex-1 min-w-fit bg-red-600 text-white px-4 py-2 rounded"
                             >
                                 Borrar pedido
                             </button>
-                            <button className="flex-1 min-w-28 bg-slate-800 text-white px-4 py-2 rounded">
-                                Guardar
+                            <button className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded">
+                                Guardar cambios
+                            </button>
+                            <button
+                                onClick={handleCompletarPedido}
+                                type="button"
+                                className="flex-1 min-w-fit bg-green-700 text-white px-4 py-2 rounded"
+                            >
+                                Completar
                             </button>
                         </div>
                     </div>
                 </form>
             )}
-            {/* // TODO Boton de completar para subir a la db como completados o mover al historial */}
         </main>
     );
 }

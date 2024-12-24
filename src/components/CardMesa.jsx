@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { useRestauranteStore } from "../store/restauranteStore";
 
 function CardMesa({ mesa }){
-    const pedidos = useRestauranteStore(state => state.pedidos)?.filter(pedido => pedido.idMesa === mesa.id);
+    const pedidos = useRestauranteStore(state => state.pedidos)?.filter(pedido => pedido.idMesa === mesa.id && !pedido.completado);
 
     if(pedidos === undefined) return null; // Si es undefined, no se ha cargado la información
 

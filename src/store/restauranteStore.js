@@ -44,16 +44,17 @@ export const useRestauranteStore = create((set, get) => ({
     },
     agregarPedido: async (uid, idMesa, pedidos) => {
         const promesas = pedidos.map(async pedido => {
-            await registrarPedido({
+            return await registrarPedido({
                 uid,
                 idMesa,
                 idProducto: pedido.idProducto,
                 nombre: pedido.nombre,
                 precio: pedido.precio,
                 cantidad: pedido.cantidad,
+                completado: pedido.completado
             });
         })
-        await Promise.all(promesas);
+        return await Promise.all(promesas);
     },
     editarProducto: async (producto) => {
         await editarProducto({
@@ -72,11 +73,12 @@ export const useRestauranteStore = create((set, get) => ({
             if(pedido.estado == ESTADOS_DOCUMENTOS.EDITADO){
                 await editarPedido(pedido.id, {
                     cantidad: pedido.cantidad,
+                    completado: pedido.completado
                 });
             } else if(pedido.estado == ESTADOS_DOCUMENTOS.BORRADO) {
                 await borrarPedido(pedido.id);
             } else if(pedido.estado === ESTADOS_DOCUMENTOS.NUEVO){
-                // Si no tiene estado, es un pedido nuevo
+                // Si no tiene estado, es un pedido nuevo (porque puede haber pedidos en la db y aparte los locales)
                 await registrarPedido({
                     uid,
                     idMesa,
@@ -84,6 +86,11 @@ export const useRestauranteStore = create((set, get) => ({
                     nombre: pedido.nombre,
                     precio: pedido.precio,
                     cantidad: pedido.cantidad,
+                    completado: pedido.completado
+                });
+            } else if(pedido.completado == true) {
+                await editarPedido(pedido.id, {
+                    completado: pedido.completado
                 });
             }
         })
