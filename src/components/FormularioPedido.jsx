@@ -114,6 +114,8 @@ function FormularioPedido({ linea=false }) {
     const handleSubmit = async (e, completado=false) => {
         if(e) e.preventDefault();
 
+        if(pedidosForm.length === 0) return;
+
         // Si algún pedido tiene un id, es porque ya pasó por la base de datos, por lo tanto se está editando
         const editando = pedidosForm.some(pedido => pedido.id);
 
@@ -134,6 +136,17 @@ function FormularioPedido({ linea=false }) {
     const handleCompletarPedido = async () => {
         await handleSubmit(undefined, true);
         navigate("/");
+    }
+
+    const handleRestablecerPedido = () => {
+        const nuevosPedidos = pedidosForm.map(pedido => {
+            // Si el pedido es local, se elimina del array
+            if(!pedido.id) return undefined;
+            // Si el pedido ya está en la db, se marca para borrar
+            return { ...pedido, cantidad: 0, estado: ESTADOS_DOCUMENTOS.BORRADO }
+        }).filter(Boolean);
+
+        setPedidosForm(nuevosPedidos);
     }
 
     useEffect(() => {
@@ -326,10 +339,11 @@ function FormularioPedido({ linea=false }) {
                         {/* Botones del formulario */}
                         <div className="flex flex-wrap gap-4">
                             <button
+                                onClick={handleRestablecerPedido}
                                 type="button"
                                 className="flex-1 min-w-fit bg-red-600 text-white px-4 py-2 rounded"
                             >
-                                Borrar pedido
+                                Restablecer
                             </button>
                             <button className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded">
                                 Guardar cambios
