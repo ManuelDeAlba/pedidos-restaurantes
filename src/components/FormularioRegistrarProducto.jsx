@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/restauranteStore";
 
-function FormularioRegistrarProducto({ setShowCategoriaForm }) {
-    const { register, handleSubmit, formState, reset } = useForm({
+function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando }) {
+    const { register, handleSubmit, formState, reset, getValues } = useForm({
         defaultValues: {
             fileFoto: undefined,
             nombre: "",
@@ -18,6 +18,7 @@ function FormularioRegistrarProducto({ setShowCategoriaForm }) {
 
     const categorias = useRestauranteStore(state => state.categorias);
     const agregarProducto = useRestauranteStore(state => state.agregarProducto);
+    const editarProducto = useRestauranteStore(state => state.editarProducto);
 
     const handleFoto = (e) => {
         // Se crea un blob temporal que sirve para mostrar la imagen que está por subirse en ese momento
@@ -25,14 +26,39 @@ function FormularioRegistrarProducto({ setShowCategoriaForm }) {
     }
 
     const onSubmit = async (data) => {
-        await agregarProducto(usuario.uid, {
-            fileFoto: data.fileFoto[0],
-            nombre: data.nombre,
-            precio: data.precio,
-            categorias: data.categorias
-        });
+        if(!productoEditando){
+            await agregarProducto(usuario.uid, {
+                fileFoto: data.fileFoto[0],
+                nombre: data.nombre,
+                precio: data.precio,
+                categorias: data.categorias
+            });
+        } else {
+            const { fileFoto: [file] } = getValues();
+
+            // Si file no existe, se manda undefined, lo que significa que la imagen no se edita
+            // Si file existe, se manda la nueva imagen
+            await editarProducto({
+                id: productoEditando.id,
+                nombre: data.nombre,
+                precio: data.precio,
+                categorias: data.categorias,
+                fileFoto: file,
+            })
+        }
         reset();
     }
+
+    useEffect(() => {
+        if (productoEditando) {
+            reset({
+                nombre: productoEditando.nombre,
+                precio: productoEditando.precio,
+                categorias: productoEditando.categorias.map(categoria => categoria),
+            });
+            setFoto(productoEditando.url);
+        }
+    }, [productoEditando])
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="lg:max-h-[calc(100dvh-90px)] overflow-auto flex flex-col gap-4">
@@ -108,7 +134,10 @@ function FormularioRegistrarProducto({ setShowCategoriaForm }) {
                     })}
                 >
                     {categorias?.map(categoria => (
-                        <option key={categoria.id} value={categoria.id}>
+                        <option
+                            key={categoria.id}
+                            value={categoria.id}
+                        >
                             {categoria.categoria}
                         </option>
                     ))}
@@ -128,7 +157,9 @@ function FormularioRegistrarProducto({ setShowCategoriaForm }) {
             </div>
 
             <button className="bg-slate-800 text-white px-4 py-2 rounded">
-                Registrar
+                {
+                    !productoEditando ? "Registrar producto" : "Editar producto"
+                }
             </button>
         </form>
     );

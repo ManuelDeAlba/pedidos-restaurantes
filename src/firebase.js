@@ -74,19 +74,22 @@ export async function registrarProducto(producto) {
         categorias: producto.categorias,
     }
 
-    try{
-        // Subir la foto del producto
-        const storageRef = ref(storage, `productos/${nuevoProducto.id}`);
-        await uploadBytes(storageRef, producto.fileFoto);
-    
-        nuevoProducto.url = await getDownloadURL(ref(storage, `productos/${nuevoProducto.id}`));
-    } catch(error){
-        // Error al subir la foto
-        console.error(error);
+    // Si el producto tiene una foto, subirla
+    if(producto.fileFoto){
+        try{
+            // Subir la foto del producto
+            const storageRef = ref(storage, `productos/${nuevoProducto.id}`);
+            await uploadBytes(storageRef, producto.fileFoto);
+        
+            nuevoProducto.url = await getDownloadURL(ref(storage, `productos/${nuevoProducto.id}`));
+        } catch(error){
+            // Error al subir la foto
+            console.error(error);
+        }
     }
 
     try{
-        // Crear un documento en la subcolección productos de la colección del restaurante
+        // Crear un documento en la colección de productos
         await setDoc(doc(db, "productos", nuevoProducto.id), nuevoProducto);
     
         return nuevoProducto;
@@ -127,6 +130,33 @@ export async function registrarPedido(pedido){
     return nuevoPedido;
 }
 
+export async function editarProducto(producto){
+    const cambios = {
+        nombre: producto.nombre,
+        precio: producto.precio,
+        categorias: producto.categorias
+    }
+
+    try{
+        if(producto.fileFoto){
+            // Sobreescribir la foto del producto
+            const storageRef = ref(storage, `productos/${producto.id}`);
+            await uploadBytes(storageRef, producto.fileFoto);
+        
+            cambios.url = await getDownloadURL(ref(storage, `productos/${producto.id}`));
+        }
+    } catch(error){
+        // Error al subir la foto
+        console.error(error);
+    }
+
+    try{
+        await updateDoc(doc(db, "productos", producto.id), cambios);
+    } catch(error){
+        console.error("Error al editar el producto", error);
+    }
+}
+
 export async function editarMesa(idMesa, nombre){
     try{
         await updateDoc(doc(db, "mesas", idMesa), { nombre });
@@ -152,6 +182,12 @@ export async function borrarCategoria(idCategoria){
 }
 
 export async function borrarProducto(idProducto){
+    try{
+        await deleteObject(ref(storage, `productos/${idProducto}`));
+    }catch(error){
+        console.error("Error al borrar la foto del producto", error);
+    }
+
     try{
         await deleteDoc(doc(db, "productos", idProducto));
     } catch(error){

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { borrarCategoria, borrarMesa, borrarPedido, borrarProducto, editarMesa, editarPedido, ESTADOS_DOCUMENTOS, obtenerCategorias, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarCategoria, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
+import { borrarCategoria, borrarMesa, borrarPedido, borrarProducto, editarMesa, editarPedido, editarProducto, ESTADOS_DOCUMENTOS, obtenerCategorias, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarCategoria, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
 
 export const useRestauranteStore = create((set, get) => ({
     restaurante: undefined,
@@ -54,6 +54,15 @@ export const useRestauranteStore = create((set, get) => ({
             });
         })
         await Promise.all(promesas);
+    },
+    editarProducto: async (producto) => {
+        await editarProducto({
+            id: producto.id,
+            nombre: producto.nombre,
+            precio: producto.precio,
+            categorias: producto.categorias,
+            fileFoto: producto.fileFoto,
+        })
     },
     editarMesa: async (idMesa, nombre) => {
         await editarMesa(idMesa, nombre);

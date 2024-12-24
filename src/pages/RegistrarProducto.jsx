@@ -4,6 +4,7 @@ import { useRestauranteStore } from '../store/restauranteStore';
 import FormularioRegistrarProducto from '../components/FormularioRegistrarProducto';
 import FormularioRegistrarCategoria from '../components/FormularioRegistrarCategoria';
 import IconoBorrar from '../icons/IconoBorrar';
+import IconoEditar from '../icons/IconoEditar';
 
 const listFormatter = new Intl.ListFormat('es', {
     type: "conjunction"
@@ -12,6 +13,8 @@ const listFormatter = new Intl.ListFormat('es', {
 function RegistrarProducto(){
     // Estado para mostrar el formulario necesario (registrar producto o agregar categoría)
     const [showCategoriaForm, setShowCategoriaForm] = useState(false);
+
+    const [productoEditando, setProductoEditando] = useState(undefined);
 
     const productos = useRestauranteStore(state => state.productos);
     const borrarProducto = useRestauranteStore(state => state.borrarProducto);
@@ -26,7 +29,10 @@ function RegistrarProducto(){
                 <div className="col-span-1 lg:h-max lg:sticky lg:top-20">
                     {
                         !showCategoriaForm ? (
-                            <FormularioRegistrarProducto setShowCategoriaForm={setShowCategoriaForm} />
+                            <FormularioRegistrarProducto
+                                setShowCategoriaForm={setShowCategoriaForm}
+                                productoEditando={productoEditando}
+                            />
                         ) : (
                             <FormularioRegistrarCategoria setShowCategoriaForm={setShowCategoriaForm} />
                         )
@@ -41,13 +47,20 @@ function RegistrarProducto(){
                             <section className="col-span-2 grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] gap-8 text-center">
                                 {productos.map(producto => (
                                     <article key={producto.id} className="flex flex-col gap-2 border-2 border-slate-800 rounded p-4">
-                                        <button
-                                            className="self-end"
-                                            onClick={() => borrarProducto(producto.id)}
-                                            aria-label="Borrar producto"
-                                        >
-                                            <IconoBorrar className="size-7 text-red-500 transition-transform hover:translate-x-1" />
-                                        </button>
+                                        <div className="flex flex-wrap gap-2 justify-end">
+                                            <button
+                                                onClick={() => setProductoEditando(producto)}
+                                                aria-label="Editar producto"
+                                            >
+                                                <IconoEditar className="size-7 text-orange-400 transition-transform hover:-translate-y-1" />
+                                            </button>
+                                            <button
+                                                onClick={() => borrarProducto(producto.id)}
+                                                aria-label="Borrar producto"
+                                            >
+                                                <IconoBorrar className="size-7 text-red-500 transition-transform hover:-translate-y-1" />
+                                            </button>
+                                        </div>
                                         <img
                                             src={producto.url ?? "https://placehold.co/150"}
                                             alt={`Imagen de ${producto.nombre}`}
