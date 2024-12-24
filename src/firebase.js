@@ -183,12 +183,26 @@ export async function borrarCategoria(idCategoria){
 }
 
 export async function borrarProducto(idProducto){
+    // Borrar los pedidos del producto que están activos
+    try{
+        const q = query(collection(db, "pedidos"), where("idProducto", "==", idProducto), where("completado", "==", false));
+        const docs = await getDocs(q);
+    
+        docs.forEach(async (doc) => {
+            await deleteDoc(doc.ref);
+        });
+    } catch(error){
+        console.error("Error al borrar los pedidos del producto", error);
+    }
+
+    // Borrar la foto del producto
     try{
         await deleteObject(ref(storage, `productos/${idProducto}`));
     }catch(error){
         console.error("Error al borrar la foto del producto", error);
     }
 
+    // Borrar el producto
     try{
         await deleteDoc(doc(db, "productos", idProducto));
     } catch(error){
