@@ -32,7 +32,7 @@ function Navbar() {
                 ) : (
                     <>
                         <Link onClick={cerrarNav} to="/registrar-producto">Registrar producto</Link>
-                        <Link onClick={cerrarNav} to="/historial">Historial</Link>
+                        <Link onClick={cerrarNav} to="/ventas-completadas">Ventas</Link>
                         <button className="flex gap-2 group" aria-label="Cerrar sesión" onClick={() => {
                             cerrarSesion();
                             cerrarNav();
