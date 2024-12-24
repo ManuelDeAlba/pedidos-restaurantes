@@ -133,6 +133,11 @@ function FormularioPedido({ linea=false }) {
         navigate("/");
     }
 
+    const handleBorrarMesa = async () => {
+        await borrarMesa(mesa.id);
+        navigate("/");
+    }
+
     const handleCompletarPedido = async () => {
         await handleSubmit(undefined, true);
         navigate("/");
@@ -207,7 +212,7 @@ function FormularioPedido({ linea=false }) {
                                 <IconoEditar className="size-7 text-orange-400 transition-transform hover:-translate-y-1" />
                             </button>
                             <button
-                                onClick={() => borrarMesa(mesa.id)}
+                                onClick={handleBorrarMesa}
                                 aria-label="Borrar mesa"
                             >
                                 <IconoBorrar className="size-7 text-red-500 transition-transform hover:-translate-y-1" />

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage, uploadBytes, getDownloadURL, deleteObject, ref} from "firebase/storage";
 
@@ -197,6 +197,19 @@ export async function borrarProducto(idProducto){
 }
 
 export async function borrarMesa(idMesa){
+    // Borrar todos los pedidos de la mesa
+    try{
+        const q = query(collection(db, "pedidos"), where("idMesa", "==", idMesa), where("completado", "==", false));
+        const docs = await getDocs(q);
+    
+        docs.forEach(async (doc) => {
+            await deleteDoc(doc.ref);
+        });
+    } catch(error){
+        console.error("Error al borrar los pedidos de la mesa", error);
+    }
+
+    // Borrar la mesa
     try{
         await deleteDoc(doc(db, "mesas", idMesa));
     } catch(error){
