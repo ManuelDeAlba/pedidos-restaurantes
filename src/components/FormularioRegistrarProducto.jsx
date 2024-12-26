@@ -45,7 +45,7 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, s
     const onSubmit = async (data) => {
         if(!productoEditando){
             await agregarProducto(usuario.uid, {
-                fileFoto: data.fileFoto,
+                fileFoto: data.fileFoto.length ? data.fileFoto[0] : undefined,
                 nombre: data.nombre,
                 precio: data.precio,
                 categorias: data.categorias
