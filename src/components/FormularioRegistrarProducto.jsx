@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import imageCompression from "browser-image-compression";
+
 import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/restauranteStore";
 
 function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando }) {
-    const { register, handleSubmit, formState, reset, getValues } = useForm({
+    const { register, handleSubmit, formState, reset, getValues, setValue } = useForm({
         defaultValues: {
             fileFoto: undefined,
             nombre: "",
@@ -20,15 +22,28 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando })
     const agregarProducto = useRestauranteStore(state => state.agregarProducto);
     const editarProducto = useRestauranteStore(state => state.editarProducto);
 
-    const handleFoto = (e) => {
-        // Se crea un blob temporal que sirve para mostrar la imagen que está por subirse en ese momento
-        setFoto(URL.createObjectURL(e.target.files[0]));
+    const handleFoto = async (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+
+        // Se comprime la imagen y se crea un Blob temporal para mostrar la imagen
+        const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 300,
+            useWebWorker: true,
+            fileType: "image/webp"
+        }
+
+        const compressedBlob = await imageCompression(file, options);
+        
+        setValue("fileFoto", compressedBlob) // Se sobreescribe el File por la versión comprimida
+        setFoto(URL.createObjectURL(compressedBlob)); // Se crea la URL con el Blob para la previsualización
     }
 
     const onSubmit = async (data) => {
         if(!productoEditando){
             await agregarProducto(usuario.uid, {
-                fileFoto: data.fileFoto[0],
+                fileFoto: data.fileFoto,
                 nombre: data.nombre,
                 precio: data.precio,
                 categorias: data.categorias
@@ -47,6 +62,7 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando })
             })
         }
         reset();
+        setFoto(null);
     }
 
     useEffect(() => {
