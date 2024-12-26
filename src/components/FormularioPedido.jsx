@@ -119,7 +119,10 @@ function FormularioPedido({ linea=false }) {
     const handleSubmit = async (e, completado=false) => {
         if(e) e.preventDefault();
 
+        // Si no hay pedidos, no se hace nada
         if(pedidosForm.length === 0) return;
+        // Si se le da al boton de completar pero no hay pedidos, solo guardar los cambios
+        if(completado && pedidosForm.every(pedido => pedido.cantidad === 0)) handleSubmit();
 
         // Si algún pedido tiene un id, es porque ya pasó por la base de datos, por lo tanto se está editando
         const editando = pedidosForm.some(pedido => pedido.id);
