@@ -5,14 +5,16 @@ import imageCompression from "browser-image-compression";
 import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/restauranteStore";
 
-function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando }) {
+const defaultFormValues = {
+    fileFoto: undefined,
+    nombre: "",
+    precio: "",
+    categorias: [],
+}
+
+function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, setProductoEditando, limpiarFormulario, setLimpiarFormulario }) {
     const { register, handleSubmit, formState, reset, getValues, setValue } = useForm({
-        defaultValues: {
-            fileFoto: undefined,
-            nombre: "",
-            precio: "",
-            categorias: [],
-        },
+        defaultValues: defaultFormValues,
     });
     const [foto, setFoto] = useState(null);
 
@@ -61,20 +63,30 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando })
                 fileFoto: file,
             })
         }
-        reset();
+        reset(defaultFormValues);
         setFoto(null);
+        setProductoEditando(false);
     }
 
     useEffect(() => {
-        if (productoEditando) {
-            reset({
-                nombre: productoEditando.nombre,
-                precio: productoEditando.precio,
-                categorias: productoEditando.categorias.map(categoria => categoria),
-            });
-            setFoto(productoEditando.url);
-        }
+        if (!productoEditando) return;
+
+        reset({
+            nombre: productoEditando.nombre,
+            precio: productoEditando.precio,
+            categorias: productoEditando.categorias.map(categoria => categoria),
+        });
+        setFoto(productoEditando.url);
     }, [productoEditando])
+
+    useEffect(() => {
+        if(!limpiarFormulario) return;
+
+        reset(defaultFormValues);
+        setFoto(null);
+        setLimpiarFormulario(false);
+        setProductoEditando(false);
+    }, [limpiarFormulario])
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="lg:max-h-[calc(100dvh-90px)] overflow-auto flex flex-col gap-4">

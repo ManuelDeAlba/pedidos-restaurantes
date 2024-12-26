@@ -15,11 +15,17 @@ function RegistrarProducto(){
     const [showCategoriaForm, setShowCategoriaForm] = useState(false);
 
     const [productoEditando, setProductoEditando] = useState(undefined);
+    const [limpiarFormulario, setLimpiarFormulario] = useState(false);
 
     const productos = useRestauranteStore(state => state.productos);
     const borrarProducto = useRestauranteStore(state => state.borrarProducto);
 
     const categorias = useRestauranteStore(state => state.categorias);
+
+    const handleBorrar = (idProducto) => {
+        borrarProducto(idProducto);
+        setLimpiarFormulario(true);
+    }
 
     return(
         <main className="container mx-auto p-8">
@@ -32,6 +38,9 @@ function RegistrarProducto(){
                             <FormularioRegistrarProducto
                                 setShowCategoriaForm={setShowCategoriaForm}
                                 productoEditando={productoEditando}
+                                setProductoEditando={setProductoEditando}
+                                limpiarFormulario={limpiarFormulario}
+                                setLimpiarFormulario={setLimpiarFormulario}
                             />
                         ) : (
                             <FormularioRegistrarCategoria setShowCategoriaForm={setShowCategoriaForm} />
@@ -55,7 +64,7 @@ function RegistrarProducto(){
                                                 <IconoEditar className="size-7 text-orange-400 transition-transform hover:-translate-y-1" />
                                             </button>
                                             <button
-                                                onClick={() => borrarProducto(producto.id)}
+                                                onClick={() => handleBorrar(producto.id)}
                                                 aria-label="Borrar producto"
                                             >
                                                 <IconoBorrar className="size-7 text-red-500 transition-transform hover:-translate-y-1" />
