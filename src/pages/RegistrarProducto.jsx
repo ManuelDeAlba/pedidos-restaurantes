@@ -3,6 +3,8 @@ import { useRestauranteStore } from '../store/restauranteStore';
 
 import FormularioRegistrarProducto from '../components/FormularioRegistrarProducto';
 import FormularioRegistrarCategoria from '../components/FormularioRegistrarCategoria';
+import ModalConfirmar from '../components/ModalConfirmar';
+
 import IconoBorrar from '../icons/IconoBorrar';
 import IconoEditar from '../icons/IconoEditar';
 
@@ -17,18 +19,41 @@ function RegistrarProducto(){
     const [productoEditando, setProductoEditando] = useState(undefined);
     const [limpiarFormulario, setLimpiarFormulario] = useState(false);
 
+    const [showModal, setShowModal] = useState(false);
+    const [idProducto, setIdProducto] = useState(null);
+
     const productos = useRestauranteStore(state => state.productos);
     const borrarProducto = useRestauranteStore(state => state.borrarProducto);
 
     const categorias = useRestauranteStore(state => state.categorias);
 
-    const handleBorrar = (idProducto) => {
-        borrarProducto(idProducto);
+    const handleBorrar = async () => {
+        if(!idProducto) return;
+
+        await borrarProducto(idProducto);
         setLimpiarFormulario(true);
+        setShowModal(false);
+    }
+
+    const handleBorrarConfirm = (idProducto) => {
+        setShowModal(true);
+        setIdProducto(idProducto);
     }
 
     return(
         <main className="container mx-auto p-8">
+            <ModalConfirmar
+                className={"bg-white flex flex-col gap-8 p-8 rounded"}
+                showModal={showModal}
+            >
+                <h2 className="text-center font-bold text-xl">¿Estás seguro de que deseas eliminar este producto?</h2>
+
+                <div className="flex flex-wrap gap-4">
+                    <button onClick={() => setShowModal(false)} className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Cancelar</button>
+                    <button onClick={handleBorrar} className="flex-1 min-w-fit bg-red-500 text-white px-4 py-2 rounded cursor-pointer">Eliminar</button>
+                </div>
+            </ModalConfirmar>
+
             <h1 className="text-center text-2xl font-bold">Registrar producto</h1>
 
             <div className='flex flex-col lg:grid md:grid-cols-3 relative gap-8 my-8'>
@@ -64,7 +89,7 @@ function RegistrarProducto(){
                                                 <IconoEditar className="size-7 text-orange-400 transition-transform hover:-translate-y-1" />
                                             </button>
                                             <button
-                                                onClick={() => handleBorrar(producto.id)}
+                                                onClick={() => handleBorrarConfirm(producto.id)}
                                                 aria-label="Borrar producto"
                                             >
                                                 <IconoBorrar className="size-7 text-red-500 transition-transform hover:-translate-y-1" />

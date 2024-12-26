@@ -1,13 +1,13 @@
 import { Link } from "react-router";
 import { useRestauranteStore } from "../store/restauranteStore";
 
-function CardMesa({ mesa }){
+function CardMesa({ mesa, linea=false }){
     const pedidos = useRestauranteStore(state => state.pedidos)?.filter(pedido => pedido.idMesa === mesa.id && !pedido.completado);
 
     if(pedidos === undefined) return null; // Si es undefined, no se ha cargado la información
 
     return(
-        <Link to={`mesa/${mesa.id}`}>
+        <Link to={`/${!linea ? "mesa" : "pedido-en-linea"}/${mesa.id}`}>
             <article className="relative size-full flex flex-col cursor-pointer border-4 border-slate-800 rounded p-4">
                 <span className={`self-end font-bold text-sm px-4 border-2 rounded-full absolute bottom-full left-1/2 -translate-x-1/2 translate-y-1/3 bg-white ${
                     mesa.linea ? "border-slate-800" : (pedidos.length ? "text-red-500 border-red-500" : "text-green-500 border-green-500")

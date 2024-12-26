@@ -68,7 +68,7 @@ function Inicio() {
                         <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] [grid-auto-rows:200px;] gap-8 my-8">
                             {
                                 mesas.filter(mesas => mesas.linea).map((mesa, index) => (
-                                    <CardMesa mesa={mesa} key={index} />
+                                    <CardMesa linea={true} mesa={mesa} key={index} />
                                 ))
                             }
                         </section>

@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/restauranteStore";
 import { ESTADOS_DOCUMENTOS } from "../firebase";
 
+import ModalConfirmar from "./ModalConfirmar";
+
 import IconoEditar from "../icons/IconoEditar";
 import IconoBorrar from "../icons/IconoBorrar";
 import IconoMenos from "../icons/IconoMenos";
@@ -29,6 +31,9 @@ function FormularioPedido({ linea=false }) {
     const [mesa, setMesa] = useState(undefined);
     const [pedidosForm, setPedidosForm] = useState([]);
     const [editandoNombre, setEditandoNombre] = useState(false);
+
+    const [showModal, setShowModal] = useState(false);
+    const [showModalCompletar, setShowModalCompletar] = useState(false);
 
     const handleCategoriaClick = (idCategoria) => {
         if (categoriaSeleccionada === idCategoria) setCategoriaSeleccionada(null);
@@ -138,9 +143,14 @@ function FormularioPedido({ linea=false }) {
         navigate("/");
     }
 
+    const handleBorrarConfirm = () => setShowModal(true);
+
+    const handleCompletarConfirm = () => setShowModalCompletar(true);
+
     const handleCompletarPedido = async () => {
         await handleSubmit(undefined, true);
-        navigate("/");
+        setShowModalCompletar(false);
+        // TODO: toast para decir si se completó, dependiendo de si existían pedidos
     }
 
     const handleRestablecerPedido = () => {
@@ -177,6 +187,29 @@ function FormularioPedido({ linea=false }) {
 
     return (
         <main className="container mx-auto p-8">
+            <ModalConfirmar
+                className={"bg-white flex flex-col gap-8 p-8 rounded"}
+                showModal={showModal}
+            >
+                <h2 className="text-center font-bold text-xl">¿Estás seguro de que deseas eliminar {linea ? "este pedido" : "esta mesa"}?</h2>
+
+                <div className="flex flex-wrap gap-4">
+                    <button onClick={() => setShowModal(false)} className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Cancelar</button>
+                    <button onClick={handleBorrarMesa} className="flex-1 min-w-fit bg-red-500 text-white px-4 py-2 rounded cursor-pointer">Eliminar</button>
+                </div>
+            </ModalConfirmar>
+            <ModalConfirmar
+                className={"bg-white flex flex-col gap-8 p-8 rounded"}
+                showModal={showModalCompletar}
+            >
+                <h2 className="text-center font-bold text-xl">¿Estás seguro de que deseas completar el pedido?</h2>
+
+                <div className="flex flex-wrap gap-4">
+                    <button onClick={() => setShowModalCompletar(false)} className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Cancelar</button>
+                    <button onClick={handleCompletarPedido} className="flex-1 min-w-fit bg-green-700 text-white px-4 py-2 rounded cursor-pointer">Completar</button>
+                </div>
+            </ModalConfirmar>
+
             <div className="flex flex-col gap-2">
                 {
                     !linea && (
@@ -212,7 +245,7 @@ function FormularioPedido({ linea=false }) {
                                 <IconoEditar className="size-7 text-orange-400 transition-transform hover:-translate-y-1" />
                             </button>
                             <button
-                                onClick={handleBorrarMesa}
+                                onClick={handleBorrarConfirm}
                                 aria-label="Borrar mesa"
                             >
                                 <IconoBorrar className="size-7 text-red-500 transition-transform hover:-translate-y-1" />
@@ -354,7 +387,7 @@ function FormularioPedido({ linea=false }) {
                                 Guardar cambios
                             </button>
                             <button
-                                onClick={handleCompletarPedido}
+                                onClick={handleCompletarConfirm}
                                 type="button"
                                 className="flex-1 min-w-fit bg-green-700 text-white px-4 py-2 rounded"
                             >
