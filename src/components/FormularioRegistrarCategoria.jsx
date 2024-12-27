@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+
 import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/restauranteStore";
 
@@ -24,14 +26,24 @@ function FormularioRegistrarCategoria({ setShowCategoriaForm }) {
     const borrarCategoria = useRestauranteStore(state => state.borrarCategoria);
 
     const onSubmit = async data => {
-        await agregarCategoria(usuario.uid, {
+        const promesa = agregarCategoria(usuario.uid, {
             categoria: data.categoria,
         });
+        await toast.promise(promesa, {
+            loading: "Registrando categoría...",
+            success: "Categoría registrada",
+            error: "Error al registrar categoría",
+        })
         reset();
     };
 
     const handleBorrarCategoria = async () => {
-        await borrarCategoria(idCategoria);
+        const promesa = borrarCategoria(idCategoria);
+        await toast.promise(promesa, {
+            loading: "Borrando categoría...",
+            success: "Categoría borrada",
+            error: "Error al borrar categoría",
+        });
         setShowModal(false);
     }
 

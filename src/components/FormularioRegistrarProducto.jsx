@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
 
 import { useAuth } from "../context/AuthProvider";
@@ -36,31 +37,47 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, s
             fileType: "image/webp"
         }
 
-        const compressedBlob = await imageCompression(file, options);
+        const promesa = imageCompression(file, options);
+        const compressedBlob = await toast.promise(promesa, {
+            loading: "Comprimiendo imagen...",
+            success: "Imagen comprimida",
+            error: "Error al comprimir imagen",
+        })
+        console.log(compressedBlob);
         
-        setValue("fileFoto", compressedBlob) // Se sobreescribe el File por la versión comprimida
+        setValue("fileFoto", [compressedBlob]) // Se sobreescribe el File por la versión comprimida
         setFoto(URL.createObjectURL(compressedBlob)); // Se crea la URL con el Blob para la previsualización
     }
 
     const onSubmit = async (data) => {
         if(!productoEditando){
-            await agregarProducto(usuario.uid, {
-                fileFoto: data.fileFoto.length ? data.fileFoto[0] : undefined,
+            const promesa = agregarProducto(usuario.uid, {
+                fileFoto: data.fileFoto[0],
                 nombre: data.nombre,
                 precio: data.precio,
                 categorias: data.categorias
             });
+            await toast.promise(promesa, {
+                loading: "Registrando producto...",
+                success: "Producto registrado",
+                error: "Error al registrar producto",
+            })
         } else {
             const { fileFoto: [file] } = getValues();
 
             // Si file no existe, se manda undefined, lo que significa que la imagen no se edita
             // Si file existe, se manda la nueva imagen
-            await editarProducto({
+            const promesa = editarProducto({
                 id: productoEditando.id,
                 nombre: data.nombre,
                 precio: data.precio,
                 categorias: data.categorias,
                 fileFoto: file,
+            })
+            await toast.promise(promesa, {
+                loading: "Editando producto...",
+                success: "Producto editado",
+                error: "Error al editar producto",
             })
         }
         reset(defaultFormValues);
@@ -68,6 +85,7 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, s
         setProductoEditando(false);
     }
 
+    // Cargar la información del producto a editar
     useEffect(() => {
         if (!productoEditando) return;
 
@@ -79,6 +97,8 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, s
         setFoto(productoEditando.url);
     }, [productoEditando])
 
+    // Si el padre le dice que tiene que limpiar el formulario, lo limpia
+    // Esto sucede cuando se borra un producto mientras se edita para evitar errores
     useEffect(() => {
         if(!limpiarFormulario) return;
 

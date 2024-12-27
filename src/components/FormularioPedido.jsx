@@ -11,6 +11,7 @@ import IconoBorrar from "../icons/IconoBorrar";
 import IconoMenos from "../icons/IconoMenos";
 import IconoMas from "../icons/IconoMas";
 import IconoFlechaSalir from "../icons/IconoFlechaSalir";
+import toast from "react-hot-toast";
 
 function FormularioPedido({ linea=false }) {
     const { id } = useParams();
@@ -128,11 +129,21 @@ function FormularioPedido({ linea=false }) {
         const editando = pedidosForm.some(pedido => pedido.id);
 
         if (!editando) {
-            // Agregar productos nuevos (no edición)
-            await agregarPedido(usuario.uid, mesa.id, pedidosForm.map(pedido => ({...pedido, completado})));
+            // Agregar pedidos nuevos (no edición)
+            const promise = agregarPedido(usuario.uid, mesa.id, pedidosForm.map(pedido => ({...pedido, completado})));
+            await toast.promise(promise, {
+                loading: !completado ? "Agregando pedidos..." : "Completando pedidos...",
+                success: !completado ? "Pedidos agregados" : "Pedidos completados",
+                error: !completado ? "Error al agregar pedidos" : "Error al completar pedidos"
+            })
         } else {
-            // Editar productos
-            await editarPedido(usuario.uid, mesa.id, pedidosForm.map(pedido => ({...pedido, completado})));
+            // Editar pedidos
+            const promise = editarPedido(usuario.uid, mesa.id, pedidosForm.map(pedido => ({...pedido, completado})));
+            await toast.promise(promise, {
+                loading: !completado ? "Editando pedidos..." : "Completando pedidos...",
+                success: !completado ? "Pedidos editados" : "Pedidos completados",
+                error: !completado ? "Error al editar pedidos" : "Error al completar pedidos"
+            })
         }
         navigate("/");
     };
@@ -142,7 +153,12 @@ function FormularioPedido({ linea=false }) {
     }
 
     const handleBorrarMesa = async () => {
-        await borrarMesa(mesa.id);
+        const promise = borrarMesa(mesa.id);
+        await toast.promise(promise, {
+            loading: `Borrando ${!linea ? "la mesa" : "el pedido en línea"}...`,
+            success: !linea ? "Mesa borrada" : "Pedido en línea borrado",
+            error: `Error al borrar ${!linea ? "la mesa" : "el pedido en línea"}`
+        })
         navigate("/");
     }
 
@@ -153,7 +169,19 @@ function FormularioPedido({ linea=false }) {
     const handleCompletarPedido = async () => {
         await handleSubmit(undefined, true);
         setShowModalCompletar(false);
-        // TODO: toast para decir si se completó, dependiendo de si existían pedidos
+    }
+
+    const handleEditarMesa = async (e) => {
+        e.preventDefault();
+
+        const promesa = editarMesa(mesa.id, mesa.nombre);
+        await toast.promise(promesa, {
+            loading: !linea ? "Editando mesa..." : "Editando pedido en línea...",
+            success: !linea ? "Mesa editada" : "Pedido en línea editado",
+            error: !linea ? "Error al editar la mesa" : "Error al editar el pedido en línea"
+        });
+        
+        setEditandoNombre(false);
     }
 
     const handleRestablecerPedido = () => {
@@ -165,6 +193,9 @@ function FormularioPedido({ linea=false }) {
         }).filter(Boolean);
 
         setPedidosForm(nuevosPedidos);
+        toast.success("Pedidos restablecidos, guarda para aplicar los cambios", {
+            duration: 5000
+        });
     }
 
     useEffect(() => {
@@ -258,18 +289,12 @@ function FormularioPedido({ linea=false }) {
                 ) : (
                     <form
                         className="flex flex-wrap gap-4 mb-4"
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            editarMesa(mesa.id, mesa.nombre);
-                            setEditandoNombre(false);
-                        }}
+                        onSubmit={handleEditarMesa}
                     >
                         <input
                             type="text"
                             value={mesa.nombre}
-                            onChange={e =>
-                                setMesa({ ...mesa, nombre: e.target.value })
-                            }
+                            onChange={e => setMesa({ ...mesa, nombre: e.target.value })}
                             className="max-w-full flex-grow-[3] py-1 px-2 border-2 border-slate-800 rounded"
                         />
                         <button className="flex-1 bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Aceptar</button>

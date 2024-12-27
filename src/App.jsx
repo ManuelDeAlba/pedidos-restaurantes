@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { Toaster } from "react-hot-toast";
 
 import AuthProvider from "./context/AuthProvider";
 import Navbar from "./components/Navbar";
@@ -13,6 +14,7 @@ function App(){
     return(
         <BrowserRouter>
             <AuthProvider>
+                <Toaster />
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<Inicio />} />

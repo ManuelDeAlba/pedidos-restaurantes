@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
+
 import { useRestauranteStore } from '../store/restauranteStore';
 
 import FormularioRegistrarProducto from '../components/FormularioRegistrarProducto';
@@ -30,7 +32,13 @@ function RegistrarProducto(){
     const handleBorrar = async () => {
         if(!idProducto) return;
 
-        await borrarProducto(idProducto);
+        const promesa = borrarProducto(idProducto);
+        await toast.promise(promesa, {
+            loading: "Borrando producto...",
+            success: "Producto borrado",
+            error: "Error al borrar producto",
+        });
+
         setLimpiarFormulario(true);
         setShowModal(false);
     }

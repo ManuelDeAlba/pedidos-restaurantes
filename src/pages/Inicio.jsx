@@ -1,8 +1,10 @@
 import { useAuth } from "../context/AuthProvider";
+import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 import { useRestauranteStore } from "../store/restauranteStore";
+
 import CardMesa from "../components/CardMesa";
-import { useNavigate } from "react-router";
 import IconoMas from "../icons/IconoMas";
 
 function Inicio() {
@@ -14,12 +16,25 @@ function Inicio() {
     const restaurante = useRestauranteStore(state => state.restaurante);
     const mesas = useRestauranteStore(state => state.mesas);
 
+    const handleAgregarMesa = async (uid) => {
+        const promesa = agregarMesa({ uid });
+        await toast.promise(promesa, {
+            loading: "Agregando mesa...",
+            success: "Mesa agregada",
+            error: "Error al agregar mesa",
+        });
+    }
 
     const handlePedidoLinea = async () => {
-        const mesaVirtual = await agregarMesa({
+        const promesa = agregarMesa({
             uid: usuario.uid,
             nombre: "Pedido nuevo",
             linea: true
+        });
+        const mesaVirtual = await toast.promise(promesa, {
+            loading: "Creando pedido en línea...",
+            success: "Pedido en línea creado",
+            error: "Error al crear pedido en línea",
         });
         navigate(`/pedido-en-linea/${mesaVirtual.id}`);
     }
@@ -53,7 +68,7 @@ function Inicio() {
                 }
 
                 <button
-                    onClick={() => agregarMesa({ uid: usuario.uid })}
+                    onClick={() => handleAgregarMesa(usuario.uid)}
                     className="size-full p-4 border-4 border-slate-800 rounded flex flex-col justify-center items-center font-semibold"
                 >
                     <IconoMas className="size-10" />
