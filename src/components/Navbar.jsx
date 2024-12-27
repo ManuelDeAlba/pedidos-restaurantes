@@ -20,7 +20,7 @@ function Navbar() {
         <nav className="flex flex-wrap gap-4 justify-between items-center p-4 h-14 bg-gray-800 text-white sticky top-0 z-50">
             <input ref={inputRef} className="peer hidden" type="checkbox" id="menu-toggle" />
 
-            {usuario && <span className="hidden md:inline">{restaurante.usuario}</span>}
+            {usuario && <span className="hidden md:inline">{restaurante?.usuario}</span>}
 
             <div className="hidden peer-checked:flex fixed top-0 left-0 w-full h-dvh bg-gray-800 flex-col justify-center items-center gap-4 md:static md:w-auto md:h-auto md:bg-transparent md:flex md:flex-row md:ml-auto z-40">
                 <Link onClick={cerrarNav} to="/">Inicio</Link>
