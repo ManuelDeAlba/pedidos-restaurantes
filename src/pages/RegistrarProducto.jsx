@@ -35,6 +35,11 @@ function RegistrarProducto(){
         else setCategoriaSeleccionada(idCategoria);
     }
 
+    const handleEditarProducto = producto => {
+        setProductoEditando(producto);
+        window.scrollTo(0, 0);
+    }
+
     const handleBorrar = async () => {
         if(!idProducto) return;
 
@@ -72,7 +77,7 @@ function RegistrarProducto(){
 
             {/* Filtros */}
             <div className="flex-grow flex flex-wrap gap-2 lg:max-h-max">
-                {categorias.map(categoria => (
+                {categorias?.map(categoria => (
                     <button
                         key={categoria.id}
                         className={`whitespace-nowrap flex-1 border-2 border-slate-800 ${categoriaSeleccionada === categoria.id ? "bg-slate-800 text-white" : "text-slate-800"} text-lg px-4 py-1 rounded`}
@@ -112,7 +117,7 @@ function RegistrarProducto(){
                                     <article key={producto.id} className="flex flex-col gap-y-1 max-h-fit border-2 border-slate-800 rounded p-4">
                                         <div className="flex flex-wrap gap-2 justify-end">
                                             <button
-                                                onClick={() => setProductoEditando(producto)}
+                                                onClick={() => handleEditarProducto(producto)}
                                                 aria-label="Editar producto"
                                             >
                                                 <IconoEditar className="size-7 text-orange-400 transition-transform hover:-translate-y-1" />
