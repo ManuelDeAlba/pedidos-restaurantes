@@ -27,7 +27,13 @@ function RegistrarProducto(){
     const productos = useRestauranteStore(state => state.productos);
     const borrarProducto = useRestauranteStore(state => state.borrarProducto);
 
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
     const categorias = useRestauranteStore(state => state.categorias);
+
+    const handleCategoriaClick = (idCategoria) => {
+        if (categoriaSeleccionada === idCategoria) setCategoriaSeleccionada(null);
+        else setCategoriaSeleccionada(idCategoria);
+    }
 
     const handleBorrar = async () => {
         if(!idProducto) return;
@@ -62,7 +68,21 @@ function RegistrarProducto(){
                 </div>
             </ModalConfirmar>
 
-            <h1 className="text-center text-2xl font-bold">Registrar producto</h1>
+            <h1 className="text-center text-2xl font-bold mb-8">Registrar producto</h1>
+
+            {/* Filtros */}
+            <div className="flex-grow flex flex-wrap gap-2 lg:max-h-max">
+                {categorias.map(categoria => (
+                    <button
+                        key={categoria.id}
+                        className={`whitespace-nowrap flex-1 border-2 border-slate-800 ${categoriaSeleccionada === categoria.id ? "bg-slate-800 text-white" : "text-slate-800"} text-lg px-4 py-1 rounded`}
+                        type="button"
+                        onClick={() => handleCategoriaClick(categoria.id)}
+                    >
+                        {categoria.categoria}
+                    </button>
+                ))}
+            </div>
 
             <div className='flex flex-col lg:grid md:grid-cols-3 relative gap-8 my-8'>
                 <div className="col-span-1 lg:h-max lg:sticky lg:top-20">
@@ -87,8 +107,9 @@ function RegistrarProducto(){
                     ) : (
                         productos?.length > 0 ? (
                             <section className="col-span-2 grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] gap-8 text-center">
-                                {productos.map(producto => (
-                                    <article key={producto.id} className="flex flex-col gap-2 border-2 border-slate-800 rounded p-4">
+                                {/* Lista de productos */}
+                                {productos.filter(producto => categoriaSeleccionada === null || producto.categorias.includes(categoriaSeleccionada)).map(producto => (
+                                    <article key={producto.id} className="flex flex-col gap-y-1 max-h-fit border-2 border-slate-800 rounded p-4">
                                         <div className="flex flex-wrap gap-2 justify-end">
                                             <button
                                                 onClick={() => setProductoEditando(producto)}
@@ -103,18 +124,20 @@ function RegistrarProducto(){
                                                 <IconoBorrar className="size-7 text-red-500 transition-transform hover:-translate-y-1" />
                                             </button>
                                         </div>
+                                        <h2 className="text-xl font-bold text-black/80">{producto.nombre}</h2>
                                         <img
                                             src={producto.url ?? "https://placehold.co/150"}
                                             alt={`Imagen de ${producto.nombre}`}
                                             className="w-full h-32 object-contain object-center mb-2"
                                         />
-                                        <h2 className="text-xl font-bold text-black/80">{producto.nombre}</h2>
-                                        <span className="flex-1 self-end text-lg font-bold text-slate-800">${producto.precio}</span>
-                                        <span>{
-                                            listFormatter.format(
-                                                categorias?.filter(categoria => producto.categorias.includes(categoria.id)).map(categoria => categoria.categoria)
-                                            )
-                                        }</span>
+                                        <span className="flex-1 self-end text-lg font-bold text-black/70">${producto.precio}</span>
+                                        <div className="flex flex-wrap gap-1">
+                                            {
+                                                categorias?.filter(categoria => producto.categorias.includes(categoria.id)).map(categoria => (
+                                                    <span className="flex-1 text-sm border border-slate-800 rounded-full px-2 py-1" key={categoria.id}>{categoria.categoria}</span>
+                                                ))
+                                            }
+                                        </div>
                                     </article>
                                 ))}
                             </section>
