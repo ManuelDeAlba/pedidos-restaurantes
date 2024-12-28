@@ -36,6 +36,9 @@ function FormularioPedido({ linea=false }) {
     const [showModal, setShowModal] = useState(false);
     const [showModalCompletar, setShowModalCompletar] = useState(false);
 
+    const [pagoCliente, setPagoCliente] = useState(undefined);
+    const [total, setTotal] = useState(undefined);
+
     const handleCategoriaClick = (idCategoria) => {
         if (categoriaSeleccionada === idCategoria) setCategoriaSeleccionada(null);
         else setCategoriaSeleccionada(idCategoria);
@@ -211,6 +214,11 @@ function FormularioPedido({ linea=false }) {
         setPedidosForm(pedidosFiltrados);
     }, [pedidos]);
 
+    useEffect(() => {
+        const total = pedidosForm?.reduce((acc, ac) => acc + ac.precio * ac.cantidad, 0)
+        setTotal(total);
+    }, [pedidosForm])
+
     if (mesa === undefined || pedidos === undefined || productos === undefined)
         return (
             <main className="container mx-auto p-8">
@@ -237,6 +245,16 @@ function FormularioPedido({ linea=false }) {
                 showModal={showModalCompletar}
             >
                 <h2 className="text-center font-bold text-xl">¿Estás seguro de que deseas completar el pedido?</h2>
+
+                <label className="flex flex-col gap-1 group" htmlFor="pago">
+                    ¿Con cuánto pagó?
+                    <input className="py-1 px-2 border-2 border-slate-800 rounded" onInput={(e) => setPagoCliente(e.target.value)} value={pagoCliente} type="text" id="pago" />
+                    {
+                        pagoCliente && (
+                            <span className="font-bold text-right">Cambio: ${pagoCliente - total}</span>
+                        )
+                    }
+                </label>
 
                 <div className="flex flex-wrap gap-4">
                     <button onClick={() => setShowModalCompletar(false)} className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Cancelar</button>
@@ -397,11 +415,7 @@ function FormularioPedido({ linea=false }) {
 
                         {/* Total de la venta */}
                         <span className="block text-right text-lg font-semibold mt-4">
-                            Total: $
-                            {pedidosForm.reduce(
-                                (acc, ac) => acc + ac.precio * ac.cantidad,
-                                0
-                            )}
+                            Total: ${total}
                         </span>
 
                         {/* Botones del formulario */}
