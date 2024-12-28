@@ -325,23 +325,25 @@ function FormularioPedido({ linea=false }) {
                         {/* Productos disponibles */}
                         <section className="grid grid-cols-[repeat(auto-fill,minmax(min(200px,100%),1fr))] gap-4">
                             {productos.filter(producto => categoriaSeleccionada === null || producto.categorias.includes(categoriaSeleccionada)).map(producto => (
-                                <article key={producto.id}>
+                                <article className="border-2 border-slate-800 rounded pb-2" key={producto.id}>
                                     <button
-                                        className="w-full border-2 border-slate-800 text-slate-800 text-lg px-4 py-2 rounded"
+                                        className="w-full text-lg px-4 py-2"
                                         onClick={() =>
                                             handleProductoPedido(producto, 1)
                                         }
                                         type="button"
                                     >
+                                        <span className="font-bold text-black/80">{producto.nombre}</span>
                                         <img
                                             src={producto.url ?? "https://placehold.co/150"}
                                             alt={`Imagen de ${producto.nombre}`}
                                             className="w-full h-32 object-contain object-center mb-2"
                                         />
-                                        {producto.nombre}
+                                        <span className="text-black/70 font-semibold">${producto.precio}</span>
+                                        <div className="h-0.5 w-full bg-slate-800 my-2"></div>
                                     </button>
 
-                                    <div className="flex gap-4 justify-center items-center mt-2">
+                                    <div className="flex gap-4 justify-center items-center">
                                         <button
                                             onClick={() =>
                                                 handleProductoPedido(producto, -1)
