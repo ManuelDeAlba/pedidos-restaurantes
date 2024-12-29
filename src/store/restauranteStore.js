@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { borrarCategoria, borrarMesa, borrarPedido, borrarProducto, editarMesa, editarPedido, editarProducto, ESTADOS_DOCUMENTOS, obtenerCategorias, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarCategoria, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
+import { borrarCategoria, borrarGasto, borrarMesa, borrarPedido, borrarProducto, editarMesa, editarPedido, editarProducto, ESTADOS_DOCUMENTOS, obtenerCategorias, obtenerGastos, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarCategoria, registrarGasto, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
 
 export const useRestauranteStore = create((set, get) => ({
     restaurante: undefined,
@@ -7,6 +7,7 @@ export const useRestauranteStore = create((set, get) => ({
     productos: undefined,
     mesas: undefined,
     pedidos: undefined,
+    gastos: undefined,
     obtenerRestaurante: async (usuario) => {
         const restaurante = await obtenerRestaurante(usuario);
         
@@ -56,6 +57,13 @@ export const useRestauranteStore = create((set, get) => ({
         })
         return await Promise.all(promesas);
     },
+    agregarGasto: async (uid, gasto, costo) => {
+        return await registrarGasto({
+            uid,
+            gasto,
+            costo: parseFloat(costo)
+        });
+    },
     editarProducto: async (producto) => {
         await editarProducto({
             id: producto.id,
@@ -99,6 +107,9 @@ export const useRestauranteStore = create((set, get) => ({
     borrarCategoria: async (idCategoria) => {
         await borrarCategoria(idCategoria);
     },
+    borrarGasto: async (idGasto) => {
+        await borrarGasto(idGasto);
+    },
     borrarProducto: async (idProducto) => {
         await borrarProducto(idProducto);
     },
@@ -129,4 +140,10 @@ export const useRestauranteStore = create((set, get) => ({
         });
         return unsubscribe;
     },
+    obtenerGastosRealTime: (uid) => {
+        const unsubscribe = obtenerGastos(uid, (gastos) => {
+            set({ gastos: gastos ?? null });
+        });
+        return unsubscribe;
+    }
 }))

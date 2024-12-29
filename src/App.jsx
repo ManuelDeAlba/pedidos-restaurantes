@@ -10,6 +10,7 @@ import FormularioPedidoMesa from "./pages/FormularioPedidoMesa";
 import FormularioPedidoLinea from "./pages/FormularioPedidoLinea";
 import RegistrarProducto from "./pages/RegistrarProducto";
 import VentasCompletadas from "./pages/VentasCompletadas";
+import Gastos from "./pages/Gastos";
 
 function App(){
     return(
@@ -24,6 +25,7 @@ function App(){
                         <Route path="/pedido-en-linea/:id" element={<FormularioPedidoLinea />} />
                         <Route path="/registrar-producto" element={<RegistrarProducto />} />
                         <Route path="/ventas-completadas" element={<VentasCompletadas />} />
+                        <Route path="/gastos" element={<Gastos />} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </ScrollToTop>

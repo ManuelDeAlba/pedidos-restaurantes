@@ -131,6 +131,20 @@ export async function registrarPedido(pedido){
     return nuevoPedido;
 }
 
+export async function registrarGasto(gasto){
+    const nuevoGasto = {
+        id: Date.now() + gasto.uid,
+        fecha: Date.now(),
+        creador: gasto.uid,
+        gasto: gasto.gasto,
+        costo: gasto.costo
+    }
+
+    await setDoc(doc(db, "gastos", nuevoGasto.id), nuevoGasto);
+
+    return nuevoGasto;
+}
+
 export async function editarProducto(producto){
     const cambios = {
         nombre: producto.nombre,
@@ -239,6 +253,14 @@ export async function borrarPedido(id){
     }
 }
 
+export async function borrarGasto(id){
+    try{
+        await deleteDoc(doc(db, "gastos", id));
+    } catch(error){
+        console.error("Error al borrar el gasto", error);
+    }
+}
+
 // Funciones para obtener los datos en tiempo real
 function obtenerColeccion({ coleccion, orderBy: ordenarPor, uid, callback }){
     const q = query(collection(db, coleccion), where("creador", "==", uid), orderBy(ordenarPor));
@@ -285,6 +307,15 @@ export function obtenerPedidos(uid, callback){
     return obtenerColeccion({
         coleccion: "pedidos",
         orderBy: "id",
+        uid,
+        callback
+    });
+}
+
+export function obtenerGastos(uid, callback){
+    return obtenerColeccion({
+        coleccion: "gastos",
+        orderBy: "fecha",
         uid,
         callback
     });

@@ -21,6 +21,7 @@ function AuthProvider({ children }) {
     const obtenerProductosRealTime = useRestauranteStore(state => state.obtenerProductosRealTime);
     const obtenerMesasRealTime = useRestauranteStore(state => state.obtenerMesasRealTime);
     const obtenerPedidosRealTime = useRestauranteStore(state => state.obtenerPedidosRealTime);
+    const obtenerGastosRealTime = useRestauranteStore(state => state.obtenerGastosRealTime);
 
     // Actualizar el estado de la sesión en tiempo real
     useEffect(() => {
@@ -45,6 +46,7 @@ function AuthProvider({ children }) {
         const unsubscribeMesas = obtenerMesasRealTime(usuario.uid);
         const unsubscribePedidos = obtenerPedidosRealTime(usuario.uid);
         const unsubscribeCategorias = obtenerCategoriasRealTime(usuario.uid);
+        const unsubscribeGastos = obtenerGastosRealTime(usuario.uid);
 
         return () => {
             console.log("Unsubscribing from real-time updates");
@@ -52,6 +54,7 @@ function AuthProvider({ children }) {
             unsubscribeMesas();
             unsubscribePedidos();
             unsubscribeCategorias();
+            unsubscribeGastos();
         }
     }, [usuario])
 
