@@ -239,59 +239,53 @@ export async function borrarPedido(id){
     }
 }
 
-// TODO: Extraer la lógica porque se repite casi todo
-export function obtenerCategorias(uid, callback){
-    const q = query(collection(db, "categoriasProductos"), where("creador", "==", uid), orderBy("categoria"));
+// Funciones para obtener los datos en tiempo real
+function obtenerColeccion({ coleccion, orderBy: ordenarPor, uid, callback }){
+    const q = query(collection(db, coleccion), where("creador", "==", uid), orderBy(ordenarPor));
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const categorias = [];
+        const documentos = [];
         querySnapshot.forEach((doc) => {
-            categorias.push(doc.data());
+            documentos.push(doc.data());
         });
-        callback(categorias);
+        callback(documentos);
     });
 
     return unsubscribe;
+}
+
+export function obtenerCategorias(uid, callback){
+    return obtenerColeccion({
+        coleccion: "categoriasProductos",
+        orderBy: "categoria",
+        uid,
+        callback
+    });
 }
 
 export function obtenerProductos(uid, callback){
-    const q = query(collection(db, "productos"), where("creador", "==", uid), orderBy("nombre"));
-    
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const productos = [];
-        querySnapshot.forEach((doc) => {
-            productos.push(doc.data());
-        });
-        callback(productos);
+    return obtenerColeccion({
+        coleccion: "productos",
+        orderBy: "nombre",
+        uid,
+        callback
     });
-
-    return unsubscribe;
 }
 
 export function obtenerMesas(uid, callback){
-    const q = query(collection(db, "mesas"), where("creador", "==", uid), orderBy("id"));
-    
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const mesas = [];
-        querySnapshot.forEach((doc) => {
-            mesas.push(doc.data());
-        });
-        callback(mesas);
+    return obtenerColeccion({
+        coleccion: "mesas",
+        orderBy: "id",
+        uid,
+        callback
     });
-
-    return unsubscribe;
 }
 
 export function obtenerPedidos(uid, callback){
-    const q = query(collection(db, "pedidos"), where("creador", "==", uid), orderBy("id"));
-    
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const pedidos = [];
-        querySnapshot.forEach((doc) => {
-            pedidos.push(doc.data());
-        });
-        callback(pedidos);
+    return obtenerColeccion({
+        coleccion: "pedidos",
+        orderBy: "id",
+        uid,
+        callback
     });
-
-    return unsubscribe;
 }
