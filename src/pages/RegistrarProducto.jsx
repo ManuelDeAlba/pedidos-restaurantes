@@ -75,22 +75,10 @@ function RegistrarProducto(){
 
             <h1 className="text-center text-2xl font-bold mb-8">Registrar producto</h1>
 
-            {/* Filtros */}
-            <div className="flex-grow flex flex-wrap gap-2 lg:max-h-max">
-                {categorias?.map(categoria => (
-                    <button
-                        key={categoria.id}
-                        className={`whitespace-nowrap flex-1 border-2 border-slate-800 ${categoriaSeleccionada === categoria.id ? "bg-slate-800 text-white" : "text-slate-800"} text-lg px-4 py-1 rounded`}
-                        type="button"
-                        onClick={() => handleCategoriaClick(categoria.id)}
-                    >
-                        {categoria.categoria}
-                    </button>
-                ))}
-            </div>
 
-            <div className='flex flex-col lg:grid md:grid-cols-3 relative gap-8 my-8'>
-                <div className="col-span-1 lg:h-max lg:sticky lg:top-20">
+            <div className="relative grid gap-8 my-8 grid-cols-1 md:grid-cols-3 [grid-template-areas:'formularios''filtros''productos'] md:[grid-template-areas:'filtros_filtros_filtros''formularios_productos_productos']">
+                {/* Formularios producto y categorías */}
+                <div className="mb-8 lg:mb-0 lg:h-max lg:sticky lg:top-20 [grid-area:formularios]">
                     {
                         !showCategoriaForm ? (
                             <FormularioRegistrarProducto
@@ -105,13 +93,27 @@ function RegistrarProducto(){
                         )
                     }
                 </div>
+                
+                {/* Filtros */}
+                <div className="flex-grow flex flex-wrap gap-2 lg:max-h-max [grid-area:filtros]">
+                    {categorias?.map(categoria => (
+                        <button
+                            key={categoria.id}
+                            className={`whitespace-nowrap flex-1 border-2 border-slate-800 ${categoriaSeleccionada === categoria.id ? "bg-slate-800 text-white" : "text-slate-800"} text-lg px-4 py-1 rounded`}
+                            type="button"
+                            onClick={() => handleCategoriaClick(categoria.id)}
+                        >
+                            {categoria.categoria}
+                        </button>
+                    ))}
+                </div>
 
                 {
                     productos === undefined ? (
-                        <h1 className="col-span-2 text-center text-3xl font-bold my-8">Cargando...</h1>
+                        <h1 className="text-center text-3xl font-bold my-8 [grid-area:productos]">Cargando...</h1>
                     ) : (
                         productos?.length > 0 ? (
-                            <section className="col-span-2 grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] gap-8 text-center">
+                            <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] gap-8 text-center [grid-area:productos]">
                                 {/* Lista de productos */}
                                 {productos.filter(producto => categoriaSeleccionada === null || producto.categorias.includes(categoriaSeleccionada)).map(producto => (
                                     <article key={producto.id} className="flex flex-col gap-y-1 max-h-fit border-2 border-slate-800 rounded p-4">
@@ -147,7 +149,7 @@ function RegistrarProducto(){
                                 ))}
                             </section>
                         ) : (
-                            <h1 className="col-span-2 text-center text-3xl font-bold my-8">No hay productos registrados</h1>
+                            <h1 className="text-center text-3xl font-bold my-8 [grid-area:productos]">No hay productos registrados</h1>
                         )
                     )
                 }
