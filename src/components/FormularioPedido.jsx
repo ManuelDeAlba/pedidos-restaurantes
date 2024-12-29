@@ -230,22 +230,21 @@ function FormularioPedido({ linea=false }) {
     return (
         <main className="container mx-auto p-8">
             <ModalConfirmar
-                className={"bg-white flex flex-col gap-8 p-8 rounded"}
                 showModal={showModal}
-            >
-                <h2 className="text-center font-bold text-xl">¿Estás seguro de que deseas eliminar {linea ? "este pedido" : "esta mesa"}?</h2>
-
-                <div className="flex flex-wrap gap-4">
-                    <button onClick={() => setShowModal(false)} className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Cancelar</button>
-                    <button onClick={handleBorrarMesa} className="flex-1 min-w-fit bg-red-500 text-white px-4 py-2 rounded cursor-pointer">Eliminar</button>
-                </div>
-            </ModalConfirmar>
+                mensaje={`¿Estás seguro de que deseas eliminar ${linea ? "este pedido" : "esta mesa"}?`}
+                cancelarMensaje="Cancelar"
+                aceptarMensaje="Eliminar"
+                onCancel={() => setShowModal(false)}
+                onAccept={handleBorrarMesa}
+            />
             <ModalConfirmar
-                className={"bg-white flex flex-col gap-8 p-8 rounded"}
                 showModal={showModalCompletar}
+                mensaje="¿Estás seguro de que deseas completar el pedido?"
+                cancelarMensaje="Cancelar"
+                aceptarMensaje="Eliminar"
+                onCancel={() => setShowModalCompletar(false)}
+                onAccept={handleCompletarPedido}
             >
-                <h2 className="text-center font-bold text-xl">¿Estás seguro de que deseas completar el pedido?</h2>
-
                 <label className="flex flex-col gap-1 group" htmlFor="pago">
                     ¿Con cuánto pagó?
                     <input className="py-1 px-2 border-2 border-slate-800 rounded" onInput={(e) => setPagoCliente(e.target.value)} value={pagoCliente} type="text" id="pago" />
@@ -255,11 +254,6 @@ function FormularioPedido({ linea=false }) {
                         )
                     }
                 </label>
-
-                <div className="flex flex-wrap gap-4">
-                    <button onClick={() => setShowModalCompletar(false)} className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Cancelar</button>
-                    <button onClick={handleCompletarPedido} className="flex-1 min-w-fit bg-green-700 text-white px-4 py-2 rounded cursor-pointer">Completar</button>
-                </div>
             </ModalConfirmar>
 
             <div className="flex flex-col gap-2">

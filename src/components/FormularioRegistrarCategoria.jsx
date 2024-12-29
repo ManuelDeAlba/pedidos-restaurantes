@@ -55,16 +55,13 @@ function FormularioRegistrarCategoria({ setShowCategoriaForm }) {
     return (
         <div className="lg:max-h-[calc(100dvh-90px)] overflow-auto">
             <ModalConfirmar
-                className={"bg-white flex flex-col gap-8 p-8 rounded"}
                 showModal={showModal}
-            >
-                <h2 className="text-center font-bold text-xl">¿Estás seguro de que deseas eliminar esta categoría?</h2>
-
-                <div className="flex flex-wrap gap-4">
-                    <button onClick={() => setShowModal(false)} className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Cancelar</button>
-                    <button onClick={handleBorrarCategoria} className="flex-1 min-w-fit bg-red-500 text-white px-4 py-2 rounded cursor-pointer">Eliminar</button>
-                </div>
-            </ModalConfirmar>
+                mensaje="¿Estás seguro de que deseas eliminar esta categoría?"
+                cancelarMensaje="Cancelar"
+                aceptarMensaje="Eliminar"
+                onCancel={() => setShowModal(false)}
+                onAccept={handleBorrarCategoria}
+            />
 
             <form
                 onSubmit={handleSubmit(onSubmit)}

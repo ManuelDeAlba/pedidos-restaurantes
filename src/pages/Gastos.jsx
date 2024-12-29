@@ -73,16 +73,13 @@ function Gastos(){
     return(
         <main className="container mx-auto p-8">
             <ModalConfirmar
-                className={"bg-white flex flex-col gap-8 p-8 rounded"}
                 showModal={showModal}
-            >
-                <h2 className="text-center font-bold text-xl">¿Estás seguro de que deseas eliminar este gasto?</h2>
-
-                <div className="flex flex-wrap gap-4">
-                    <button onClick={() => setShowModal(false)} className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Cancelar</button>
-                    <button onClick={handleBorrarGasto} className="flex-1 min-w-fit bg-red-500 text-white px-4 py-2 rounded cursor-pointer">Eliminar</button>
-                </div>
-            </ModalConfirmar>
+                mensaje="¿Estás seguro de que deseas eliminar este gasto?"
+                cancelarMensaje="Cancelar"
+                aceptarMensaje="Eliminar"
+                onCancel={() => setShowModal(false)}
+                onAccept={handleBorrarGasto}
+            />
 
             <h1 className="text-center font-bold text-2xl">Gastos</h1>
 

@@ -62,16 +62,13 @@ function RegistrarProducto(){
     return(
         <main className="container mx-auto p-8">
             <ModalConfirmar
-                className={"bg-white flex flex-col gap-8 p-8 rounded"}
                 showModal={showModal}
-            >
-                <h2 className="text-center font-bold text-xl">¿Estás seguro de que deseas eliminar este producto?</h2>
-
-                <div className="flex flex-wrap gap-4">
-                    <button onClick={() => setShowModal(false)} className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Cancelar</button>
-                    <button onClick={handleBorrar} className="flex-1 min-w-fit bg-red-500 text-white px-4 py-2 rounded cursor-pointer">Eliminar</button>
-                </div>
-            </ModalConfirmar>
+                mensaje="¿Estás seguro de que deseas eliminar este producto?"
+                cancelarMensaje="Cancelar"
+                aceptarMensaje="Eliminar"
+                onCancel={() => setShowModal(false)}
+                onAccept={handleBorrar}
+            />
 
             <h1 className="text-center text-2xl font-bold mb-8">Registrar producto</h1>
 
