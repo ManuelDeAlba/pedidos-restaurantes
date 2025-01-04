@@ -75,8 +75,8 @@ function Gastos(){
             <ModalConfirmar
                 showModal={showModal}
                 mensaje="¿Estás seguro de que deseas eliminar este gasto?"
-                cancelarMensaje="Cancelar"
                 aceptarMensaje="Eliminar"
+                aceptarColor="bg-red-500"
                 onCancel={() => setShowModal(false)}
                 onAccept={handleBorrarGasto}
             />

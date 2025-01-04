@@ -64,8 +64,8 @@ function RegistrarProducto(){
             <ModalConfirmar
                 showModal={showModal}
                 mensaje="¿Estás seguro de que deseas eliminar este producto?"
-                cancelarMensaje="Cancelar"
                 aceptarMensaje="Eliminar"
+                aceptarColor="bg-red-500"
                 onCancel={() => setShowModal(false)}
                 onAccept={handleBorrar}
             />

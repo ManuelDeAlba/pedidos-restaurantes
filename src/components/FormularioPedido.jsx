@@ -232,16 +232,14 @@ function FormularioPedido({ linea=false }) {
             <ModalConfirmar
                 showModal={showModal}
                 mensaje={`¿Estás seguro de que deseas eliminar ${linea ? "este pedido" : "esta mesa"}?`}
-                cancelarMensaje="Cancelar"
                 aceptarMensaje="Eliminar"
+                aceptarColor="bg-red-500"
                 onCancel={() => setShowModal(false)}
                 onAccept={handleBorrarMesa}
             />
             <ModalConfirmar
                 showModal={showModalCompletar}
                 mensaje="¿Estás seguro de que deseas completar el pedido?"
-                cancelarMensaje="Cancelar"
-                aceptarMensaje="Eliminar"
                 onCancel={() => setShowModalCompletar(false)}
                 onAccept={handleCompletarPedido}
             >
