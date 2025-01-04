@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { useRestauranteStore } from "../store/restauranteStore";
 
+const timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+const dateFormatter = new Intl.DateTimeFormat('es-ES', {
+    dateStyle: 'full',
+    timeZone: timeZone
+});
+
 function VentasCompletadas(){
     const pedidos = useRestauranteStore(state => state.pedidos);
     const [pedidosAgrupados, setPedidosAgrupados] = useState(undefined);
@@ -52,7 +58,7 @@ function VentasCompletadas(){
                     pedidosAgrupados.length > 0 && (
                         pedidosAgrupados.map((pedidos, index) => (
                             <article key={index}>
-                                <h2 className="text-2xl font-bold mb-2">Fecha: {new Date(pedidos[0].fecha).toLocaleDateString()}</h2>
+                                <h3 className="text-2xl font-bold mb-2">{dateFormatter.format(new Date(pedidos[0].fecha))}</h3>
                                 <ul className="flex flex-col">
                                     {
                                         pedidos.map((pedido, index) => (
