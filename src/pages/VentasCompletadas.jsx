@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRestauranteStore } from "../store/restauranteStore";
 
+import GraficasVentas from "../components/GraficasVentas";
+
 const timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 const dateFormatter = new Intl.DateTimeFormat('es-ES', {
     dateStyle: 'full',
@@ -11,6 +13,7 @@ function VentasCompletadas(){
     const pedidos = useRestauranteStore(state => state.pedidos);
     const [pedidosAgrupados, setPedidosAgrupados] = useState(undefined);
 
+    // Agrupar los pedidos por día y por producto para mostrar en la lista de ventas
     useEffect(() => {
         if(pedidos === undefined) return;
         const pedidosFiltrados = pedidos.filter(pedido => pedido.completado);
@@ -52,6 +55,8 @@ function VentasCompletadas(){
     return(
         <main className="container mx-auto p-8">
             <h1 className="text-center text-2xl font-bold">Ventas completadas</h1>
+
+            <GraficasVentas />
 
             <section className="flex flex-col gap-4 my-8">
                 {
