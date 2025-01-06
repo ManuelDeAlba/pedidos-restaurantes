@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, ComposedChart, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { useRestauranteStore } from "../store/restauranteStore";
 
@@ -58,18 +58,12 @@ function GraficasVentas(){
             fecha: new Date(obj.fecha).toLocaleDateString()
         })));
     }, [productosSeleccionados])
-
-    // Poner los productos seleccionados por defecto
-    useEffect(() => {
-        if(productosDisponibles === undefined) return;
-        setProductosSeleccionados(productosDisponibles.map(producto => producto.replaceAll(" ", "_")));
-    }, [productosDisponibles])
     
     return(
         productosDisponibles !== undefined && (
             <section className="flex flex-col items-center justify-center gap-4 my-8">
                 <p>Selecciona los productos para mostrar en la gráfica</p>
-                <select className="w-[90%] max-w-screen-md border border-slate-800" onChange={(e) => {
+                <select className="w-[90%] max-w-screen-md py-1 px-2 border-2 border-slate-800 rounded" onChange={(e) => {
                     const selected = Array.from(e.target.selectedOptions).map(option => option.value);
                     setProductosSeleccionados(selected);
                 }} multiple>
@@ -116,7 +110,7 @@ function GraficasVentas(){
                                 <Tooltip />
                                 {
                                     productosSeleccionados?.length > 0 && productosSeleccionados.map((producto, index) => (
-                                        <Line key={index} type="monotone" dataKey={producto} stroke={`hsl(${Math.floor(Math.random()*361)}, 100%, 40%)`} strokeWidth={3} />
+                                        <Line key={index} type="monotone" dataKey={producto} stroke={`hsl(${(360/productosSeleccionados.length) * index}, 100%, 40%)`} strokeWidth={3} />
                                     ))
                                 }
                             </LineChart>
@@ -132,7 +126,7 @@ function GraficasVentas(){
                                     <Tooltip />
                                     {
                                         productosSeleccionados?.length > 0 && productosSeleccionados.map((producto, index) => (
-                                            <Bar key={index} type="monotone" dataKey={producto} fill={`hsl(${Math.floor(Math.random()*361)}, 100%, 40%)`} strokeWidth={3} />
+                                            <Bar key={index} type="monotone" dataKey={producto} fill={`hsl(${(360/productosSeleccionados.length) * index}, 100%, 40%)`} strokeWidth={3} />
                                         ))
                                     }
                                 </BarChart>
