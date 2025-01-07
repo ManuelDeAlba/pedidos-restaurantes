@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/restauranteStore";
 
+import ModalConfirmar from "../components/ModalConfirmar";
 import GraficasVentas from "../components/GraficasVentas";
 
 const timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -10,8 +14,13 @@ const dateFormatter = new Intl.DateTimeFormat('es-ES', {
 });
 
 function VentasCompletadas(){
+    const { usuario } = useAuth();
+
     const pedidos = useRestauranteStore(state => state.pedidos);
+    const limpiarVentas = useRestauranteStore(state => state.limpiarVentas);
+    
     const [pedidosAgrupados, setPedidosAgrupados] = useState(undefined);
+    const [showModal, setShowModal] = useState(false);
 
     // Agrupar los pedidos por día y por producto para mostrar en la lista de ventas
     useEffect(() => {
@@ -46,14 +55,44 @@ function VentasCompletadas(){
         setPedidosAgrupados(totales);
     }, [pedidos])
 
+    const handleLimpiarVentas = async () => {
+        if(!usuario) return;
+
+        // Limpiar los pedidos completados
+        const promesa = limpiarVentas(usuario.uid);
+        await toast.promise(promesa, {
+            loading: "Limpiando ventas...",
+            success: "Ventas limpiadas",
+            error: "Error al limpiar ventas",
+        })
+        
+        setShowModal(false);
+    }
+
     if(pedidosAgrupados === undefined) return (
         <main className="container mx-auto p-8">
             <h1 className="text-center text-3xl font-bold">Cargando...</h1>
         </main>
     )
 
+    if(pedidosAgrupados.length === 0) return (
+        <main className="container mx-auto p-8">
+            <h1 className="text-center text-3xl font-bold">No hay ventas completadas</h1>
+        </main>
+    )
+
     return(
         <main className="container mx-auto p-8">
+            <ModalConfirmar
+                showModal={showModal}
+                mensaje="¿Estás seguro de que deseas limpiar las ventas"
+                aceptarMensaje="Eliminar"
+                aceptarColor="bg-red-500"
+                onCancel={() => setShowModal(false)}
+                onAccept={handleLimpiarVentas}
+            />
+                
+
             <h1 className="text-center text-2xl font-bold">Ventas completadas</h1>
 
             <GraficasVentas />
@@ -80,6 +119,8 @@ function VentasCompletadas(){
                     )
                 }
             </section>
+
+            <button className="block ml-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => setShowModal(true)}>Limpiar ventas</button>
         </main>
     )
 }

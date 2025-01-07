@@ -261,6 +261,15 @@ export async function borrarGasto(id){
     }
 }
 
+export async function limpiarVentas(uid){
+    const q = query(collection(db, "pedidos"), where("creador", "==", uid), where("completado", "==", true));
+    
+    const docs = await getDocs(q);
+    docs.forEach(async doc => {
+        await deleteDoc(doc.ref);
+    });
+}
+
 // Funciones para obtener los datos en tiempo real
 function obtenerColeccion({ coleccion, orderBy: ordenarPor, uid, callback }){
     const q = query(collection(db, coleccion), where("creador", "==", uid), orderBy(ordenarPor));
