@@ -1,19 +1,26 @@
-import { useAuth } from "../context/AuthProvider";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
+
+import { useAuth } from "../context/AuthProvider";
 
 import { useRestauranteStore } from "../store/restauranteStore";
 
 import CardMesa from "../components/CardMesa";
 import IconoMas from "../icons/IconoMas";
+import IconoEditar from "../icons/IconoEditar";
 
 function Inicio() {
     const { usuario, iniciarSesionGoogle } = useAuth();
     const navigate = useNavigate();
 
-    const agregarMesa = useRestauranteStore(state => state.agregarMesa);
-    
+    const [nombreRestaurante, setNombreRestaurante] = useState("");
+    const [editandoNombre, setEditandoNombre] = useState(false);
+
     const restaurante = useRestauranteStore(state => state.restaurante);
+    const editarNombreRestaurante = useRestauranteStore(state => state.editarNombreRestaurante);
+    
+    const agregarMesa = useRestauranteStore(state => state.agregarMesa);
     const mesas = useRestauranteStore(state => state.mesas);
 
     const handleAgregarMesa = async (uid) => {
@@ -39,6 +46,25 @@ function Inicio() {
         navigate(`/pedido-en-linea/${mesaVirtual.id}`);
     }
 
+    const handleEditarRestaurante = async (e) => {
+        e.preventDefault();
+
+        const promesa = editarNombreRestaurante(restaurante.id, nombreRestaurante);
+        await toast.promise(promesa, {
+            loading: "Editando nombre de restaurante...",
+            success: "Nombre de restaurante editado",
+            error: "Error al editar nombre de restaurante",
+        });
+
+        setEditandoNombre(false);
+    }
+
+    useEffect(() => {
+        if(!restaurante) return;
+
+        setNombreRestaurante(restaurante.nombre);
+    }, [restaurante])
+
     if (usuario === null) {
         return (
             <main className="flex flex-col items-center my-10">
@@ -57,7 +83,34 @@ function Inicio() {
 
     return (
         <main className="relative container mx-auto p-8 mb-8">
-            <h1 className="text-center font-bold text-2xl mb-8">Restaurante de {restaurante.usuario}</h1>
+            {
+                !editandoNombre ? (
+                    <div className="grid grid-cols-[1fr_auto] mb-4">
+                        <h1 className="text-center font-bold text-2xl">{restaurante.nombre}</h1>
+
+                        <button
+                            className="ml-auto"
+                            onClick={() => setEditandoNombre(true)}
+                            aria-label="Editar nombre de restaurante"
+                        >
+                            <IconoEditar className="size-7 text-orange-400 transition-transform hover:-translate-y-1" />
+                        </button>
+                    </div>
+                ) : (
+                    <form
+                        className="flex flex-wrap gap-4 mb-4"
+                        onSubmit={handleEditarRestaurante}
+                    >
+                        <input
+                            type="text"
+                            value={nombreRestaurante}
+                            onChange={e => setNombreRestaurante(e.target.value)}
+                            className="max-w-full flex-grow-[3] py-1 px-2 border-2 border-slate-800 rounded"
+                        />
+                        <button className="flex-1 bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Aceptar</button>
+                    </form>
+                )
+            }
 
             <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] [grid-auto-rows:200px;] gap-8 my-8">
                 {

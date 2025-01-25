@@ -31,7 +31,7 @@ export const ESTADOS_DOCUMENTOS = {
 export async function registrarRestaurante(usuario) {
     const nuevoRestaurante = {
         id: usuario.uid,
-        usuario: usuario.displayName,
+        nombre: "Restaurante de " + usuario.displayName,
         email: usuario.email,
         createdAt: new Date(),
     }
@@ -51,6 +51,14 @@ export async function obtenerRestaurante(usuario){
 
     // Si no existe, lo registra y lo devuelve
     return await registrarRestaurante(usuario);
+}
+
+export async function editarRestaurante(datos){
+    try{
+        await updateDoc(doc(db, "restaurantes", datos.id), datos);
+    } catch(error){
+        console.error("Error al editar el restaurante", error);
+    }
 }
 
 export async function registrarCategoria(categoria) {

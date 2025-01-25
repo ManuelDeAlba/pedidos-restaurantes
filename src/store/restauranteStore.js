@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { borrarCategoria, borrarGasto, borrarMesa, borrarPedido, borrarProducto, editarMesa, editarPedido, editarProducto, ESTADOS_DOCUMENTOS, limpiarVentas, obtenerCategorias, obtenerGastos, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarCategoria, registrarGasto, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
+import { borrarCategoria, borrarGasto, borrarMesa, borrarPedido, borrarProducto, editarMesa, editarPedido, editarProducto, editarRestaurante, ESTADOS_DOCUMENTOS, limpiarVentas, obtenerCategorias, obtenerGastos, obtenerMesas, obtenerPedidos, obtenerProductos, obtenerRestaurante, registrarCategoria, registrarGasto, registrarMesa, registrarPedido, registrarProducto } from "../firebase";
 
 export const useRestauranteStore = create((set, get) => ({
     restaurante: undefined,
@@ -14,6 +14,17 @@ export const useRestauranteStore = create((set, get) => ({
         set({ restaurante: restaurante ?? null });
         
         return restaurante;
+    },
+    editarNombreRestaurante: async (idRestaurante, nombre) => {
+        await editarRestaurante({ id: idRestaurante, nombre });
+
+        // Se actualiza el nombre del restaurante en el estado
+        set((state) => ({
+            restaurante: {
+                ...state.restaurante,
+                nombre
+            }
+        }));
     },
     agregarCategoria: async (uid, datos) => {
         const nuevaCategoria = await registrarCategoria({
