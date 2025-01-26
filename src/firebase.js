@@ -65,7 +65,7 @@ export async function registrarCategoria(categoria) {
     const nuevaCategoria = {
         id: Date.now() + categoria.uid,
         creador: categoria.uid,
-        categoria: categoria.categoria,
+        categoria: categoria.categoria.trim(),
     }
 
     await setDoc(doc(db, "categoriasProductos", nuevaCategoria.id), nuevaCategoria);
@@ -77,8 +77,8 @@ export async function registrarProducto(producto) {
     let nuevoProducto = {
         id: Date.now() + producto.uid,
         creador: producto.uid,
-        nombre: producto.nombre,
-        precio: producto.precio,
+        nombre: producto.nombre.trim(),
+        precio: producto.precio.trim(),
         categorias: producto.categorias,
     }
 
@@ -112,7 +112,7 @@ export async function registrarMesa(mesa){
     const nuevaMesa = {
         id: Date.now() + mesa.uid,
         creador: mesa.uid,
-        nombre: mesa.nombre,
+        nombre: mesa.nombre.trim(),
         linea: mesa.linea
     }
 
@@ -128,8 +128,8 @@ export async function registrarPedido(pedido){
         creador: pedido.uid,
         idMesa: pedido.idMesa,
         idProducto: pedido.idProducto,
-        nombre: pedido.nombre,
-        precio: pedido.precio,
+        nombre: pedido.nombre.trim(),
+        precio: pedido.precio.trim(),
         cantidad: pedido.cantidad,
         completado: pedido.completado
     }
@@ -144,7 +144,7 @@ export async function registrarGasto(gasto){
         id: Date.now() + gasto.uid,
         fecha: Date.now(),
         creador: gasto.uid,
-        gasto: gasto.gasto,
+        gasto: gasto.gasto.trim(),
         costo: gasto.costo
     }
 
@@ -155,8 +155,8 @@ export async function registrarGasto(gasto){
 
 export async function editarProducto(producto){
     const cambios = {
-        nombre: producto.nombre,
-        precio: producto.precio,
+        nombre: producto.nombre.trim(),
+        precio: producto.precio.trim(),
         categorias: producto.categorias
     }
 
@@ -182,7 +182,7 @@ export async function editarProducto(producto){
 
 export async function editarMesa(idMesa, nombre){
     try{
-        await updateDoc(doc(db, "mesas", idMesa), { nombre });
+        await updateDoc(doc(db, "mesas", idMesa), { nombre: nombre.trim() });
     } catch(error){
         console.error("Error al editar la mesa", error);
     }

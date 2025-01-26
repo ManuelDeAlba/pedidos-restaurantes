@@ -16,13 +16,13 @@ export const useRestauranteStore = create((set, get) => ({
         return restaurante;
     },
     editarNombreRestaurante: async (idRestaurante, nombre) => {
-        await editarRestaurante({ id: idRestaurante, nombre });
+        await editarRestaurante({ id: idRestaurante, nombre: nombre.trim() });
 
         // Se actualiza el nombre del restaurante en el estado
         set((state) => ({
             restaurante: {
                 ...state.restaurante,
-                nombre
+                nombre: nombre.trim()
             }
         }));
     },
