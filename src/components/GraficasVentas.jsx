@@ -16,13 +16,18 @@ function GraficasVentas(){
     const [productosSeleccionados, setProductosSeleccionados] = useState(undefined);
     const [tipoGrafica, setTipoGrafica] = useState(TIPOS_GRAFICA.LINEA);
 
+    const handleSelect = (e) => {
+        const selected = Array.from(e.target.selectedOptions).map(option => option.value);
+        setProductosSeleccionados(selected);
+    }
+
     // Guardar los productos que ya tienen ventas para poder seleccionarlos en la gráfica
     useEffect(() => {
         if(pedidos === undefined) return;
         const pedidosFiltrados = pedidos.filter(pedido => pedido.completado);
 
         // Guardar los productos que ya tienen ventas para poder seleccionarlos en la gráfica
-        setProductosDisponibles([...new Set(pedidosFiltrados.map(pedido => pedido.nombre))]);
+        setProductosDisponibles([...new Set(pedidosFiltrados.map(pedido => pedido.nombre).sort((a, b) => a.localeCompare(b)))]);
     }, [pedidos])
 
     // Convertir los datos para la gráfica
@@ -63,10 +68,7 @@ function GraficasVentas(){
         productosDisponibles !== undefined && (
             <section className="flex flex-col items-center justify-center gap-4 my-8">
                 <p>Selecciona los productos para mostrar en la gráfica</p>
-                <select className="w-[90%] max-w-screen-md py-1 px-2 border-2 border-slate-800 rounded" onChange={(e) => {
-                    const selected = Array.from(e.target.selectedOptions).map(option => option.value);
-                    setProductosSeleccionados(selected);
-                }} multiple>
+                <select className="w-[90%] max-w-screen-md py-1 px-2 border-2 border-slate-800 rounded" onChange={handleSelect} multiple>
                     {
                         productosDisponibles.map((producto, index) => (
                             <option key={index} value={producto.replaceAll(" ", "_")} selected={productosSeleccionados?.includes(producto.replaceAll(" ", "_"))}>{producto}</option>
