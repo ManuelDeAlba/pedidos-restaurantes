@@ -50,7 +50,7 @@ function VentasCompletadas(){
                     cantidad: pedido.reduce((acc, ac) => acc + ac.cantidad, 0)
                 }
             })
-        }).sort((a, b) => new Date(a[0].fecha)- new Date(b[0].fecha));
+        }).sort((a, b) => new Date(b[0].fecha) - new Date(a[0].fecha));
 
         setPedidosAgrupados(totales);
     }, [pedidos])
