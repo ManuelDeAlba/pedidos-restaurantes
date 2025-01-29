@@ -6,12 +6,19 @@ import { useRestauranteStore } from "../store/restauranteStore";
 
 import ModalConfirmar from "../components/ModalConfirmar";
 import GraficasVentas from "../components/GraficasVentas";
+import IconoOrdenarAscendente from "../icons/IconoOrdenarAscendente";
+import IconoOrdenarDescendente from "../icons/IconoOrdenarDescendente";
 
 const timeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
 const dateFormatter = new Intl.DateTimeFormat('es-ES', {
     dateStyle: 'full',
     timeZone: timeZone
 });
+
+const ORDEN_VENTAS = {
+    ASCENDENTE: "ascendente",
+    DESCENDENTE: "descendente"
+}
 
 function VentasCompletadas(){
     const { usuario } = useAuth();
@@ -21,6 +28,31 @@ function VentasCompletadas(){
     
     const [pedidosAgrupados, setPedidosAgrupados] = useState(undefined);
     const [showModal, setShowModal] = useState(false);
+    const [ordenVentas, setOrdenVentas] = useState(ORDEN_VENTAS.DESCENDENTE);
+
+    const toggleOrdenVentas = () => {
+        if(ordenVentas == ORDEN_VENTAS.ASCENDENTE) setOrdenVentas(ORDEN_VENTAS.DESCENDENTE);
+        else setOrdenVentas(ORDEN_VENTAS.ASCENDENTE);
+    }
+
+    const ordenarPedidos = (a, b) => {
+        if(ordenVentas === ORDEN_VENTAS.DESCENDENTE) return new Date(b[0].fecha) - new Date(a[0].fecha);
+        else return new Date(a[0].fecha) - new Date(b[0].fecha);
+    }
+
+    const handleLimpiarVentas = async () => {
+        if(!usuario) return;
+
+        // Limpiar los pedidos completados
+        const promesa = limpiarVentas(usuario.uid);
+        await toast.promise(promesa, {
+            loading: "Limpiando ventas...",
+            success: "Ventas limpiadas",
+            error: "Error al limpiar ventas",
+        })
+        
+        setShowModal(false);
+    }
 
     // Agrupar los pedidos por día y por producto para mostrar en la lista de ventas
     useEffect(() => {
@@ -50,24 +82,18 @@ function VentasCompletadas(){
                     cantidad: pedido.reduce((acc, ac) => acc + ac.cantidad, 0)
                 }
             })
-        }).sort((a, b) => new Date(b[0].fecha) - new Date(a[0].fecha));
+        }).toSorted(ordenarPedidos);
 
         setPedidosAgrupados(totales);
     }, [pedidos])
 
-    const handleLimpiarVentas = async () => {
-        if(!usuario) return;
+    useEffect(() => {
+        if(!pedidosAgrupados) return;
 
-        // Limpiar los pedidos completados
-        const promesa = limpiarVentas(usuario.uid);
-        await toast.promise(promesa, {
-            loading: "Limpiando ventas...",
-            success: "Ventas limpiadas",
-            error: "Error al limpiar ventas",
-        })
-        
-        setShowModal(false);
-    }
+        const pedidosOrdenados = pedidosAgrupados.toSorted(ordenarPedidos);
+
+        setPedidosAgrupados(pedidosOrdenados);
+    }, [ordenVentas])
 
     if(pedidosAgrupados === undefined) return (
         <main className="container mx-auto p-8">
@@ -98,6 +124,13 @@ function VentasCompletadas(){
             <GraficasVentas />
 
             <section className="flex flex-col gap-4 my-8">
+                <button onClick={toggleOrdenVentas} className="mx-auto">
+                    {
+                        ordenVentas == ORDEN_VENTAS.DESCENDENTE ?
+                        <span className="flex gap-2"><IconoOrdenarAscendente /> Ordenar de antiguo a reciente</span> :
+                        <span className="flex gap-2"><IconoOrdenarDescendente /> Ordenar de reciente a antiguo</span>
+                    }
+                </button>
                 {
                     pedidosAgrupados.length > 0 && (
                         pedidosAgrupados.map((pedidos, index) => (
