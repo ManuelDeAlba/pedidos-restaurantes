@@ -8,7 +8,7 @@ const TIPOS_GRAFICA = {
     BARRAS: 2
 }
 
-function GraficasVentas(){
+function GraficasVentas({ filtroFechas }){
     const pedidos = useRestauranteStore(state => state.pedidos);
 
     const [datosGrafica, setDatosGrafica] = useState(undefined);
@@ -24,16 +24,19 @@ function GraficasVentas(){
     // Guardar los productos que ya tienen ventas para poder seleccionarlos en la gráfica
     useEffect(() => {
         if(pedidos === undefined) return;
-        const pedidosFiltrados = pedidos.filter(pedido => pedido.completado);
+        const pedidosFiltrados = pedidos
+                .filter(pedido => pedido.completado) // Filtrar solamente los pedidos completados
+                .filter(pedido => pedido.fecha >= (filtroFechas?.minFecha ?? 0) && pedido.fecha <= (filtroFechas?.maxFecha ?? Date.now())); // Filtrar por fecha
 
         // Guardar los productos que ya tienen ventas para poder seleccionarlos en la gráfica
         setProductosDisponibles([...new Set(pedidosFiltrados.map(pedido => pedido.nombre).sort((a, b) => a.localeCompare(b)))]);
-    }, [pedidos])
+    }, [pedidos, filtroFechas])
 
     // Convertir los datos para la gráfica
     useEffect(() => {
         if(pedidos === undefined) return;
-        const pedidosFiltrados = pedidos.filter(pedido => pedido.completado);
+        const pedidosFiltrados = pedidos.filter(pedido => pedido.completado) // Filtrar solamente los pedidos completados
+        .filter(pedido => pedido.fecha >= (filtroFechas?.minFecha ?? 0) && pedido.fecha <= (filtroFechas?.maxFecha ?? Date.now())); // Filtrar por fecha
 
         // Agrupar los pedidos por día
         const agrupadosFecha = Object.groupBy(pedidosFiltrados, (pedido) => new Date(pedido.fecha).toLocaleDateString().replaceAll("/", "_"));
@@ -62,7 +65,7 @@ function GraficasVentas(){
             ...obj,
             fecha: new Date(obj.fecha).toLocaleDateString()
         })));
-    }, [productosSeleccionados])
+    }, [productosSeleccionados, filtroFechas])
     
     return(
         productosDisponibles !== undefined && (

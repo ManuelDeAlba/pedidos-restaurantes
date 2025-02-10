@@ -26,9 +26,40 @@ function VentasCompletadas(){
     const pedidos = useRestauranteStore(state => state.pedidos);
     const limpiarVentas = useRestauranteStore(state => state.limpiarVentas);
     
+    const [filtroFechas, setFiltroFechas] = useState({
+        minFecha: 0,
+        maxFecha: Date.now()
+    });
     const [pedidosAgrupados, setPedidosAgrupados] = useState(undefined);
     const [showModal, setShowModal] = useState(false);
     const [ordenVentas, setOrdenVentas] = useState(ORDEN_VENTAS.DESCENDENTE);
+
+    const handleFechas = (e) => {
+        // Si se está borrando el contenido de un input date
+        if(e.target.value === "") {
+            setFiltroFechas({
+                ...filtroFechas,
+                [e.target.name]: e.target.name === "minFecha" ? 0 : Date.now()
+            });
+            return;
+        }
+
+        // Si se establece otra fecha, convertirla a timestamp
+        const fecha = e.target.value.replaceAll("-", "/");
+        const timestamp = new Date(fecha).getTime();
+
+        setFiltroFechas({
+            ...filtroFechas,
+            [e.target.name]: timestamp
+        });
+    }
+
+    const handleLimpiarFechas = () => {
+        setFiltroFechas({
+            minFecha: 0,
+            maxFecha: Date.now()
+        });
+    }
 
     const toggleOrdenVentas = () => {
         if(ordenVentas == ORDEN_VENTAS.ASCENDENTE) setOrdenVentas(ORDEN_VENTAS.DESCENDENTE);
@@ -57,7 +88,9 @@ function VentasCompletadas(){
     // Agrupar los pedidos por día y por producto para mostrar en la lista de ventas
     useEffect(() => {
         if(pedidos === undefined) return;
-        const pedidosFiltrados = pedidos.filter(pedido => pedido.completado);
+        const pedidosFiltrados = pedidos
+                .filter(pedido => pedido.completado) // Filtrar solamente los pedidos completados
+                .filter(pedido => pedido.fecha >= (filtroFechas?.minFecha ?? 0) && pedido.fecha <= (filtroFechas?.maxFecha ?? Date.now())); // Filtrar por fecha
 
         // Agrupar los pedidos por día
         const agrupadosFecha = Object.groupBy(pedidosFiltrados, (pedido) => new Date(pedido.fecha).toLocaleDateString().replaceAll("/", "_"));
@@ -85,7 +118,7 @@ function VentasCompletadas(){
         }).toSorted(ordenarPedidos);
 
         setPedidosAgrupados(totales);
-    }, [pedidos])
+    }, [pedidos, filtroFechas])
 
     useEffect(() => {
         if(!pedidosAgrupados) return;
@@ -119,9 +152,34 @@ function VentasCompletadas(){
             />
                 
 
-            <h1 className="text-center text-2xl font-bold">Ventas completadas</h1>
+            <h1 className="text-center text-2xl font-bold mb-8">Ventas completadas</h1>
 
-            <GraficasVentas />
+            {/* Filtro de fechas */}
+            <div className="flex flex-col justify-center items-center gap-2">
+                <span>Filtrar por fecha</span>
+
+                <div className="w-full xs:w-auto flex flex-col xs:flex-row gap-4">
+                    <input
+                        className="py-1 px-2 border-2 border-slate-800 rounded"
+                        type="date"
+                        name="minFecha"
+                        value={typeof filtroFechas.minFecha === "number" ? new Date(filtroFechas.minFecha).toISOString().split("T")[0] : ""}
+                        onInput={handleFechas}
+                    />
+                    <span className="font-bold text-3xl hidden xs:flex">-</span>
+                    <input
+                        className="py-1 px-2 border-2 border-slate-800 rounded"
+                        type="date"
+                        name="maxFecha"
+                        value={typeof filtroFechas.maxFecha === "number" ? new Date(filtroFechas.maxFecha).toISOString().split("T")[0] : ""}
+                        onInput={handleFechas}
+                    />
+                </div>
+
+                <button className="w-full xs:w-auto bg-slate-800 text-white font-bold py-2 px-4 rounded" onClick={handleLimpiarFechas}>Limpiar</button>
+            </div>
+
+            <GraficasVentas filtroFechas={filtroFechas} />
 
             <section className="flex flex-col gap-4 my-8">
                 <button onClick={toggleOrdenVentas} className="mx-auto">
