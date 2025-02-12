@@ -160,7 +160,7 @@ function VentasCompletadas(){
 
                 <div className="w-full xs:w-auto flex flex-col xs:flex-row gap-4">
                     <input
-                        className="py-1 px-2 border-2 border-slate-800 rounded"
+                        className="py-1 px-2 border-2 border-slate-800 rounded-sm"
                         type="date"
                         name="minFecha"
                         value={typeof filtroFechas.minFecha === "number" ? new Date(filtroFechas.minFecha).toISOString().split("T")[0] : ""}
@@ -168,7 +168,7 @@ function VentasCompletadas(){
                     />
                     <span className="font-bold text-3xl hidden xs:flex">-</span>
                     <input
-                        className="py-1 px-2 border-2 border-slate-800 rounded"
+                        className="py-1 px-2 border-2 border-slate-800 rounded-sm"
                         type="date"
                         name="maxFecha"
                         value={typeof filtroFechas.maxFecha === "number" ? new Date(filtroFechas.maxFecha).toISOString().split("T")[0] : ""}
@@ -176,7 +176,7 @@ function VentasCompletadas(){
                     />
                 </div>
 
-                <button className="w-full xs:w-auto bg-slate-800 text-white font-bold py-2 px-4 rounded" onClick={handleLimpiarFechas}>Limpiar</button>
+                <button className="w-full xs:w-auto bg-slate-800 text-white font-bold py-2 px-4 rounded-sm" onClick={handleLimpiarFechas}>Limpiar</button>
             </div>
 
             <GraficasVentas filtroFechas={filtroFechas} />
@@ -211,7 +211,7 @@ function VentasCompletadas(){
                 }
             </section>
 
-            <button className="block ml-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => setShowModal(true)}>Limpiar ventas</button>
+            <button className="block ml-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-sm" onClick={() => setShowModal(true)}>Limpiar ventas</button>
         </main>
     )
 }

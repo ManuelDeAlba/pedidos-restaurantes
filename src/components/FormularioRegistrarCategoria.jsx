@@ -85,7 +85,7 @@ function FormularioRegistrarCategoria({ setShowCategoriaForm }) {
                 <div className="flex flex-col gap-1">
                     <label htmlFor="categoria">Nombre de la categoría</label>
                     <input
-                        className="py-1 px-2 border-2 border-slate-800 rounded"
+                        className="py-1 px-2 border-2 border-slate-800 rounded-sm"
                         type="text"
                         {...register("categoria", {
                             required: {
@@ -101,7 +101,7 @@ function FormularioRegistrarCategoria({ setShowCategoriaForm }) {
                     )}
                 </div>
 
-                <button className="bg-slate-800 text-white px-4 py-2 rounded">
+                <button className="bg-slate-800 text-white px-4 py-2 rounded-sm">
                     Crear
                 </button>
             </form>

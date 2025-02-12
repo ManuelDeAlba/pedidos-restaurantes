@@ -70,7 +70,7 @@ function Inicio() {
             <main className="flex flex-col items-center my-10">
                 <h1 className="text-center text-3xl font-bold mb-8">Inicia sesión para continuar</h1>
                 <button
-                    className="bg-slate-800 text-white px-4 py-2 rounded"
+                    className="bg-slate-800 text-white px-4 py-2 rounded-sm"
                     onClick={iniciarSesionGoogle}
                 >
                     Iniciar sesión
@@ -105,9 +105,9 @@ function Inicio() {
                             type="text"
                             value={nombreRestaurante}
                             onChange={e => setNombreRestaurante(e.target.value)}
-                            className="max-w-full flex-grow-[3] py-1 px-2 border-2 border-slate-800 rounded"
+                            className="max-w-full flex-grow-3 py-1 px-2 border-2 border-slate-800 rounded-sm"
                         />
-                        <button className="flex-1 bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Aceptar</button>
+                        <button className="flex-1 bg-slate-800 text-white px-4 py-2 rounded-sm cursor-pointer">Aceptar</button>
                     </form>
                 )
             }
@@ -122,7 +122,7 @@ function Inicio() {
 
                 <button
                     onClick={() => handleAgregarMesa(usuario.uid)}
-                    className="size-full p-4 border-4 border-slate-800 rounded flex flex-col justify-center items-center font-semibold"
+                    className="size-full p-4 border-4 border-slate-800 rounded-sm flex flex-col justify-center items-center font-semibold"
                 >
                     <IconoMas className="size-10" />
                     Agregar mesa
@@ -146,7 +146,7 @@ function Inicio() {
 
             <button
                 onClick={handlePedidoLinea}
-                className="fixed bottom-4 inset-x-8 border-4 border-slate-800 bg-slate-800 text-white p-3 rounded hover:bg-white hover:text-slate-800"
+                className="fixed bottom-4 inset-x-8 border-4 border-slate-800 bg-slate-800 text-white p-3 rounded-sm hover:bg-white hover:text-slate-800"
             >Registrar pedido en línea</button>
         </main>
     );

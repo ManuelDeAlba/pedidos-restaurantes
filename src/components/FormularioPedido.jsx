@@ -245,7 +245,7 @@ function FormularioPedido({ linea=false }) {
             >
                 <label className="flex flex-col gap-1 group" htmlFor="pago">
                     ¿Con cuánto pagó?
-                    <input className="py-1 px-2 border-2 border-slate-800 rounded" onInput={(e) => setPagoCliente(e.target.value)} value={pagoCliente} type="text" id="pago" />
+                    <input className="py-1 px-2 border-2 border-slate-800 rounded-sm" onInput={(e) => setPagoCliente(e.target.value)} value={pagoCliente} type="text" id="pago" />
                     {
                         pagoCliente && (
                             <span className="font-bold text-right">Cambio: ${pagoCliente - total}</span>
@@ -305,9 +305,9 @@ function FormularioPedido({ linea=false }) {
                             type="text"
                             value={mesa.nombre}
                             onChange={e => setMesa({ ...mesa, nombre: e.target.value })}
-                            className="max-w-full flex-grow-[3] py-1 px-2 border-2 border-slate-800 rounded"
+                            className="max-w-full grow-3 py-1 px-2 border-2 border-slate-800 rounded-sm"
                         />
-                        <button className="flex-1 bg-slate-800 text-white px-4 py-2 rounded cursor-pointer">Aceptar</button>
+                        <button className="flex-1 bg-slate-800 text-white px-4 py-2 rounded-sm cursor-pointer">Aceptar</button>
                     </form>
                 )}
             </div>
@@ -318,11 +318,11 @@ function FormularioPedido({ linea=false }) {
                     className="flex flex-col lg:flex-row gap-10 my-8"
                 >
                     {/* Filtros */}
-                    <div className="flex-grow flex flex-wrap gap-2 lg:flex-col lg:max-h-max lg:sticky lg:top-20">
+                    <div className="grow flex flex-wrap gap-2 lg:flex-col lg:max-h-max lg:sticky lg:top-20">
                         {categorias.map(categoria => (
                             <button
                                 key={categoria.id}
-                                className={`whitespace-nowrap flex-1 border-2 border-slate-800 ${categoriaSeleccionada === categoria.id ? "bg-slate-800 text-white" : "text-slate-800"} text-lg px-4 py-1 rounded`}
+                                className={`whitespace-nowrap flex-1 border-2 border-slate-800 ${categoriaSeleccionada === categoria.id ? "bg-slate-800 text-white" : "text-slate-800"} text-lg px-4 py-1 rounded-sm`}
                                 type="button"
                                 onClick={() => handleCategoriaClick(categoria.id)}
                             >
@@ -331,11 +331,11 @@ function FormularioPedido({ linea=false }) {
                         ))}
                     </div>
 
-                    <div className="flex-grow-[5] flex flex-col gap-4">
+                    <div className="grow-5 flex flex-col gap-4">
                         {/* Productos disponibles */}
                         <section className="grid grid-cols-[repeat(auto-fill,minmax(min(200px,100%),1fr))] gap-4">
                             {productos.filter(producto => categoriaSeleccionada === null || producto.categorias.includes(categoriaSeleccionada)).map(producto => (
-                                <article className="border-2 border-slate-800 rounded pb-2" key={producto.id}>
+                                <article className="border-2 border-slate-800 rounded-sm pb-2" key={producto.id}>
                                     <button
                                         className="w-full text-lg px-4 py-2"
                                         onClick={() =>
@@ -415,17 +415,17 @@ function FormularioPedido({ linea=false }) {
                             <button
                                 onClick={handleRestablecerPedido}
                                 type="button"
-                                className="flex-1 min-w-fit bg-red-600 text-white px-4 py-2 rounded"
+                                className="flex-1 min-w-fit bg-red-600 text-white px-4 py-2 rounded-sm"
                             >
                                 Restablecer
                             </button>
-                            <button className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded">
+                            <button className="flex-1 min-w-fit bg-slate-800 text-white px-4 py-2 rounded-sm">
                                 Guardar cambios
                             </button>
                             <button
                                 onClick={handleCompletarConfirm}
                                 type="button"
-                                className="flex-1 min-w-fit bg-green-700 text-white px-4 py-2 rounded"
+                                className="flex-1 min-w-fit bg-green-700 text-white px-4 py-2 rounded-sm"
                             >
                                 Completar
                             </button>

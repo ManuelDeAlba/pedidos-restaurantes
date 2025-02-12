@@ -71,7 +71,7 @@ function GraficasVentas({ filtroFechas }){
         productosDisponibles !== undefined && (
             <section className="flex flex-col items-center justify-center gap-4 my-8">
                 <p>Selecciona los productos para mostrar en la gráfica</p>
-                <select className="w-[90%] max-w-screen-md py-1 px-2 border-2 border-slate-800 rounded" onChange={handleSelect} multiple>
+                <select className="w-[90%] max-w-(--breakpoint-md) py-1 px-2 border-2 border-slate-800 rounded-sm" onChange={handleSelect} multiple>
                     {
                         productosDisponibles.map((producto, index) => (
                             <option key={index} value={producto.replaceAll(" ", "_")} selected={productosSeleccionados?.includes(producto.replaceAll(" ", "_"))}>{producto}</option>

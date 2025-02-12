@@ -16,7 +16,7 @@ function ModalConfirmar({
                 showModal ? "opacity-100" : "opacity-0 pointer-events-none"
             } transition-opacity`}
         >
-            <div className="bg-white flex flex-col gap-8 p-8 rounded">
+            <div className="bg-white flex flex-col gap-8 p-8 rounded-sm">
                 <h2 className="text-center font-bold text-xl">{mensaje}</h2>
 
                 {children && <div className={className}>{children}</div>}
@@ -24,13 +24,13 @@ function ModalConfirmar({
                 <div className="flex flex-wrap gap-4">
                     <button
                         onClick={onCancel}
-                        className={`flex-1 min-w-fit ${cancelarColor} text-white px-4 py-2 rounded cursor-pointer`}
+                        className={`flex-1 min-w-fit ${cancelarColor} text-white px-4 py-2 rounded-sm cursor-pointer`}
                     >
                         {cancelarMensaje}
                     </button>
                     <button
                         onClick={onAccept}
-                        className={`flex-1 min-w-fit ${aceptarColor} text-white px-4 py-2 rounded cursor-pointer`}
+                        className={`flex-1 min-w-fit ${aceptarColor} text-white px-4 py-2 rounded-sm cursor-pointer`}
                     >
                         {aceptarMensaje}
                     </button>

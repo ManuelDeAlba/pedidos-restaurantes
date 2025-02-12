@@ -112,7 +112,7 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, s
         <form onSubmit={handleSubmit(onSubmit)} className="lg:max-h-[calc(100dvh-90px)] overflow-auto flex flex-col gap-4">
             <div className="flex flex-col gap-2">
                 <label
-                    className="bg-slate-800 text-white px-4 py-2 rounded text-center cursor-pointer"
+                    className="bg-slate-800 text-white px-4 py-2 rounded-sm text-center cursor-pointer"
                     htmlFor="foto"
                 >Subir foto</label>
                 <input
@@ -130,7 +130,7 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, s
             <div className="flex flex-col gap-1">
                 <label htmlFor="nombre">Nombre del producto</label>
                 <input
-                    className="py-1 px-2 border-2 border-slate-800 rounded"
+                    className="py-1 px-2 border-2 border-slate-800 rounded-sm"
                     type="text"
                     {...register("nombre", {
                         required: {
@@ -149,7 +149,7 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, s
             <div className="flex flex-col gap-1">
                 <label htmlFor="precio">Precio</label>
                 <input
-                    className="py-1 px-2 border-2 border-slate-800 rounded"
+                    className="py-1 px-2 border-2 border-slate-800 rounded-sm"
                     type="text"
                     {...register("precio", {
                         required: {
@@ -173,7 +173,7 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, s
                 <label htmlFor="categorias">Categoría</label>
                 <select
                     multiple
-                    className="py-1 px-2 border-2 border-slate-800 rounded"
+                    className="py-1 px-2 border-2 border-slate-800 rounded-sm"
                     {...register("categorias", {
                         required: {
                             value: true,
@@ -204,7 +204,7 @@ function FormularioRegistrarProducto({ setShowCategoriaForm, productoEditando, s
                 </button>
             </div>
 
-            <button className="bg-slate-800 text-white px-4 py-2 rounded">
+            <button className="bg-slate-800 text-white px-4 py-2 rounded-sm">
                 {
                     !productoEditando ? "Registrar producto" : "Editar producto"
                 }

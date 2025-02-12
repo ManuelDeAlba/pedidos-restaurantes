@@ -92,11 +92,11 @@ function RegistrarProducto(){
                 </div>
                 
                 {/* Filtros */}
-                <div className="flex-grow flex flex-wrap gap-2 lg:max-h-max [grid-area:filtros]">
+                <div className="grow flex flex-wrap gap-2 lg:max-h-max [grid-area:filtros]">
                     {categorias?.map(categoria => (
                         <button
                             key={categoria.id}
-                            className={`whitespace-nowrap flex-1 border-2 border-slate-800 ${categoriaSeleccionada === categoria.id ? "bg-slate-800 text-white" : "text-slate-800"} text-lg px-4 py-1 rounded`}
+                            className={`whitespace-nowrap flex-1 border-2 border-slate-800 ${categoriaSeleccionada === categoria.id ? "bg-slate-800 text-white" : "text-slate-800"} text-lg px-4 py-1 rounded-sm`}
                             type="button"
                             onClick={() => handleCategoriaClick(categoria.id)}
                         >
@@ -113,7 +113,7 @@ function RegistrarProducto(){
                             <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] gap-8 text-center [grid-area:productos]">
                                 {/* Lista de productos */}
                                 {productos.filter(producto => categoriaSeleccionada === null || producto.categorias.includes(categoriaSeleccionada)).map(producto => (
-                                    <article key={producto.id} className="flex flex-col gap-y-1 max-h-fit border-2 border-slate-800 rounded p-4">
+                                    <article key={producto.id} className="flex flex-col gap-y-1 max-h-fit border-2 border-slate-800 rounded-sm p-4">
                                         <div className="flex flex-wrap gap-2 justify-end">
                                             <button
                                                 onClick={() => handleEditarProducto(producto)}

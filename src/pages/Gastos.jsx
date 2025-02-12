@@ -87,7 +87,7 @@ function Gastos(){
                 <label className="flex flex-col gap-1">
                     Nombre del gasto
                     <input
-                        className="py-1 px-2 border-2 border-slate-800 rounded"
+                        className="py-1 px-2 border-2 border-slate-800 rounded-sm"
                         type="text"
                         {...register("gasto", {
                             required: {
@@ -106,7 +106,7 @@ function Gastos(){
                 <label className="flex flex-col gap-1">
                     Costo
                     <input
-                        className="py-1 px-2 border-2 border-slate-800 rounded"
+                        className="py-1 px-2 border-2 border-slate-800 rounded-sm"
                         type="text"
                         {...register("costo", {
                             required: {
@@ -126,7 +126,7 @@ function Gastos(){
                     )}
                 </label>
 
-                <button className="bg-slate-800 text-white px-4 py-2 rounded">Agregar</button>
+                <button className="bg-slate-800 text-white px-4 py-2 rounded-sm">Agregar</button>
             </form>
 
             <section className="my-8">
