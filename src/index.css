@@ -21,3 +21,10 @@
     border-color: var(--color-gray-200, currentColor);
   }
 }
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
