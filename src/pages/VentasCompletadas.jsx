@@ -6,6 +6,8 @@ import { useRestauranteStore } from "../store/restauranteStore";
 
 import ModalConfirmar from "../components/ModalConfirmar";
 import GraficasVentas from "../components/GraficasVentas";
+import BotonDescargar from "../components/BotonDescargar";
+
 import IconoOrdenarAscendente from "../icons/IconoOrdenarAscendente";
 import IconoOrdenarDescendente from "../icons/IconoOrdenarDescendente";
 
@@ -210,8 +212,11 @@ function VentasCompletadas(){
                     )
                 }
             </section>
-
-            <button className="block ml-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-sm" onClick={() => setShowModal(true)}>Limpiar ventas</button>
+            
+            <div className="flex flex-wrap gap-4 justify-end items-center">
+                <BotonDescargar datos={pedidosAgrupados}>Descargar ventas</BotonDescargar>
+                <button className="block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-sm" onClick={() => setShowModal(true)}>Limpiar ventas</button>
+            </div>
         </main>
     )
 }
