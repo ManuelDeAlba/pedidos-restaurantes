@@ -6,6 +6,7 @@ import { useRestauranteStore } from '../store/restauranteStore';
 import FormularioRegistrarProducto from '../components/FormularioRegistrarProducto';
 import FormularioRegistrarCategoria from '../components/FormularioRegistrarCategoria';
 import ModalConfirmar from '../components/ModalConfirmar';
+import BotonDescargar from '../components/BotonDescargar';
 
 import IconoBorrar from '../icons/IconoBorrar';
 import IconoEditar from '../icons/IconoEditar';
@@ -110,41 +111,46 @@ function RegistrarProducto(){
                         <h1 className="text-center text-3xl font-bold my-8 [grid-area:productos]">Cargando...</h1>
                     ) : (
                         productos?.length > 0 ? (
-                            <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] gap-8 text-center [grid-area:productos]">
-                                {/* Lista de productos */}
-                                {productos.filter(producto => categoriaSeleccionada === null || producto.categorias.includes(categoriaSeleccionada)).map(producto => (
-                                    <article key={producto.id} className="flex flex-col gap-y-1 max-h-fit border-2 border-slate-800 rounded-sm p-4">
-                                        <div className="flex flex-wrap gap-2 justify-end">
-                                            <button
-                                                onClick={() => handleEditarProducto(producto)}
-                                                aria-label="Editar producto"
-                                            >
-                                                <IconoEditar className="size-7 text-orange-400 transition-transform hover:-translate-y-1" />
-                                            </button>
-                                            <button
-                                                onClick={() => handleBorrarConfirm(producto.id)}
-                                                aria-label="Borrar producto"
-                                            >
-                                                <IconoBorrar className="size-7 text-red-500 transition-transform hover:-translate-y-1" />
-                                            </button>
-                                        </div>
-                                        <h2 className="text-xl font-bold text-black/80">{producto.nombre}</h2>
-                                        <img
-                                            src={producto.url ?? "https://placehold.co/150"}
-                                            alt={`Imagen de ${producto.nombre}`}
-                                            className="w-full h-32 object-contain object-center mb-2"
-                                        />
-                                        <span className="flex-1 self-end text-lg font-bold text-black/70">${producto.precio}</span>
-                                        <div className="flex flex-wrap gap-1">
-                                            {
-                                                categorias?.filter(categoria => producto.categorias.includes(categoria.id)).map(categoria => (
-                                                    <span className="flex-1 text-sm border border-slate-800 rounded-full px-2 py-1" key={categoria.id}>{categoria.categoria}</span>
-                                                ))
-                                            }
-                                        </div>
-                                    </article>
-                                ))}
-                            </section>
+                            <>
+                                <section className="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] gap-8 text-center [grid-area:productos]">
+                                    {/* Lista de productos */}
+                                    {productos.filter(producto => categoriaSeleccionada === null || producto.categorias.includes(categoriaSeleccionada)).map(producto => (
+                                        <article key={producto.id} className="flex flex-col gap-y-1 max-h-fit border-2 border-slate-800 rounded-sm p-4">
+                                            <div className="flex flex-wrap gap-2 justify-end">
+                                                <button
+                                                    onClick={() => handleEditarProducto(producto)}
+                                                    aria-label="Editar producto"
+                                                >
+                                                    <IconoEditar className="size-7 text-orange-400 transition-transform hover:-translate-y-1" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleBorrarConfirm(producto.id)}
+                                                    aria-label="Borrar producto"
+                                                >
+                                                    <IconoBorrar className="size-7 text-red-500 transition-transform hover:-translate-y-1" />
+                                                </button>
+                                            </div>
+                                            <h2 className="text-xl font-bold text-black/80">{producto.nombre}</h2>
+                                            <img
+                                                src={producto.url ?? "https://placehold.co/150"}
+                                                alt={`Imagen de ${producto.nombre}`}
+                                                className="w-full h-32 object-contain object-center mb-2"
+                                            />
+                                            <span className="flex-1 self-end text-lg font-bold text-black/70">${producto.precio}</span>
+                                            <div className="flex flex-wrap gap-1">
+                                                {
+                                                    categorias?.filter(categoria => producto.categorias.includes(categoria.id)).map(categoria => (
+                                                        <span className="flex-1 text-sm border border-slate-800 rounded-full px-2 py-1" key={categoria.id}>{categoria.categoria}</span>
+                                                    ))
+                                                }
+                                            </div>
+                                        </article>
+                                    ))}
+                                    <div className='flex justify-end col-span-full'>
+                                        <BotonDescargar datos={productos} nombre="productos">Descargar productos</BotonDescargar>
+                                    </div>
+                                </section>
+                            </>
                         ) : (
                             <h1 className="text-center text-3xl font-bold my-8 [grid-area:productos]">No hay productos registrados</h1>
                         )

@@ -214,7 +214,7 @@ function VentasCompletadas(){
             </section>
             
             <div className="flex flex-wrap gap-4 justify-end items-center">
-                <BotonDescargar datos={pedidosAgrupados}>Descargar ventas</BotonDescargar>
+                <BotonDescargar datos={pedidosAgrupados} nombre="ventas">Descargar ventas</BotonDescargar>
                 <button className="block bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-sm" onClick={() => setShowModal(true)}>Limpiar ventas</button>
             </div>
         </main>

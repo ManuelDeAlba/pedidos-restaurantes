@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthProvider";
 import { useRestauranteStore } from "../store/restauranteStore";
 
 import ModalConfirmar from "./ModalConfirmar";
+import BotonDescargar from "./BotonDescargar";
 
 import IconoBorrar from "../icons/IconoBorrar";
 
@@ -121,6 +122,7 @@ function FormularioRegistrarCategoria({ setShowCategoriaForm }) {
                     </li>
                 ))}
             </ul>
+            <BotonDescargar datos={categorias} nombre="categorias" className="mt-2 ml-auto">Descargar categorías</BotonDescargar>
         </div>
     );
 }
