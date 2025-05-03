@@ -148,6 +148,8 @@ function FormularioPedido({ linea=false }) {
                 error: !completado ? "Error al editar pedidos" : "Error al completar pedidos"
             })
         }
+        // Si se completó el pedido y es en línea, borrar la "mesa" (pedido en línea)
+        if(completado && linea) await borrarMesa(mesa.id);
         navigate("/");
     };
 
